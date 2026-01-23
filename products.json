@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "name": "Amul Taaza Milk (1L)",
+    "price": 80,
+    "category": "dairy",
+    "image": "https://fpsstore.in/cdn/shop/products/148715-2_2-amul-toned-milk.png?v=1641466845",
+    "stock": "In Stock",
+    "description": "Fresh Amul Taaza milk, perfect for your daily needs"
+  },
+  {
+    "id": 2,
+    "name": "Amul Butter (500g)",
+    "price": 150,
+    "category": "dairy",
+    "image": "https://assets.hyperpure.com/data/images/products/03669d1e950fd601fd7963fc6827201e.jpg",
+    "stock": "In Stock",
+    "description": "Pure Amul butter for cooking and spreads"
+  },
+  {
+    "id": 3,
+    "name": "Basmati Rice (5kg)",
+    "price": 450,
+    "category": "grocery",
+    "image": "https://images.unsplash.com/photo-1586201375761-83865001e31c?ixlib=rb-4.0.3",
+    "stock": "In Stock",
+    "description": "Premium quality basmati rice"
+  },
+  {
+    "id": 4,
+    "name": "Sunflower Oil (1L)",
+    "price": 180,
+    "category": "grocery",
+    "image": "https://5.imimg.com/data5/LN/BG/MY-19588085/sunlower-oil-500ml-500x500.png",
+    "stock": "Low Stock",
+    "description": "Pure sunflower oil for healthy cooking"
+  },
+  {
+    "id": 5,
+    "name": "Coca-Cola (2L)",
+    "price": 90,
+    "category": "beverages",
+    "image": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-4.0.3",
+    "stock": "In Stock",
+    "description": "Refreshing Coca-Cola beverage"
+  },
+  {
+    "id": 6,
+    "name": "Lays Chips (100g)",
+    "price": 20,
+    "category": "snacks",
+    "image": "https://pictures.grocerapps.com/original/grocerapp-lays-french-cheese-potato-chips-6544d6f87f309.jpeg",
+    "stock": "In Stock",
+    "description": "Crispy Lays potato chips"
+  },
+  {
+    "id": 7,
+    "name": "Fresh Curd (500g)",
+    "price": 50,
+    "category": "dairy",
+    "image": "https://cdn.grofers.com/da/cms-assets/cms/product/2107cdc3-8d54-41fb-a7ee-89d8573b9f06.jpg",
+    "stock": "In Stock",
+    "description": "Fresh homemade style curd"
+  },
+  {
+    "id": 8,
+    "name": "Aashirvaad Atta (5kg)",
+    "price": 300,
+    "category": "grocery",
+    "image": "https://epkmart.com/wp-content/uploads/2020/12/aashirvaad-aata.png",
+    "stock": "In Stock",
+    "description": "Quality wheat flour for your daily bread"
+  }
+]

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhishek Dairy & General Store - Your Neighborhood Kirana</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fefefe;
+            color: #333;
+            overflow-x: hidden;
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #4ade80 0%, #3b82f6 50%, #8b5cf6 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .category-icon {
+            transition: transform 0.5s ease;
+        }
+        .category-icon:hover {
+            transform: rotate(15deg) scale(1.1);
+        }
+        .loading-spinner {
+            border: 4px solid rgba(0,0,0,0.1);
+            border-left-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .pulse-ring {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+        .sticky-nav {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+        .floating-whatsapp {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 sticky-nav shadow-md">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-green-500 p-2 rounded-lg">
+                        <i class="fas fa-store text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Abhishek Dairy & General Store</h1>
+                        <p class="text-sm text-gray-600">Dhotti, Waidhan, Singrauli</p>
+                    </div>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
+                    <a href="#products" class="text-gray-700 hover:text-blue-600 font-medium">Products</a>
+                    <a href="#categories" class="text-gray-700 hover:text-blue-600 font-medium">Categories</a>
+                    <a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium">Contact</a>
+                </nav>
+                <button class="md:hidden text-gray-700" id="menuToggle">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="hidden md:hidden bg-white shadow-lg" id="mobileMenu">
+            <div class="flex flex-col py-4 px-4 space-y-4">
+                <a href="#home" class="text-gray-700 hover:text-blue-600 font-medium py-2">Home</a>
+                <a href="#products" class="text-gray-700 hover:text-blue-600 font-medium py-2">Products</a>
+                <a href="#categories" class="text-gray-700 hover:text-blue-600 font-medium py-2">Categories</a>
+                <a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium py-2">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-gradient py-16 md:py-24 text-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-4">Fresh Dairy & Daily Essentials Delivered</h2>
+                    <p class="text-xl mb-6 opacity-90">Your trusted neighborhood Kirana store providing quality products with home delivery in Waidhan, Singrauli.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="tel:7879355368" class="bg-white text-blue-600 font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl transition">
+                            <i class="fas fa-phone-alt mr-2"></i>Call Now: 7879355368
+                        </a>
+                        <a href="#contact" class="bg-transparent border-2 border-white text-white font-bold py-3 px-6 rounded-full hover:bg-white hover:text-blue-600 transition">
+                            <i class="fas fa-map-marker-alt mr-2"></i>Visit Store
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <div class="relative">
+                        <div class="bg-white rounded-2xl shadow-2xl p-2">
+                            <img src="https://images.unsplash.com/photo-1581349485608-9469926decdd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Kirana Store" class="rounded-xl w-full max-w-lg">
+                        </div>
+                        <div class="absolute -bottom-6 -right-6 bg-yellow-400 text-gray-800 p-4 rounded-xl shadow-2xl">
+                            <div class="text-3xl font-bold">24/7</div>
+                            <div class="text-sm">Delivery Available</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products API Section -->
+    <section id="products" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Our Products</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Fresh dairy products, groceries, snacks, beverages, and all daily essentials. Prices updated in real-time.</p>
+            </div>
+            <div class="mb-8 flex justify-center">
+                <div class="relative w-full max-w-md">
+                    <input type="text" id="searchProduct" placeholder="Search for products..." class="w-full p-4 pl-12 rounded-xl border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fas fa-search absolute left-4 top-5 text-gray-400"></i>
+                </div>
+            </div>
+            <div class="mb-8 flex justify-center space-x-4 overflow-x-auto py-2">
+                <button class="filter-btn px-4 py-2 rounded-full bg-blue-600 text-white font-medium" data-category="all">All Items</button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 font-medium hover:bg-blue-100" data-category="dairy">Dairy</button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 font-medium hover:bg-blue-100" data-category="grocery">Groceries</button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 font-medium hover:bg-blue-100" data-category="beverages">Beverages</button>
+                <button class="filter-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 font-medium hover:bg-blue-100" data-category="snacks">Snacks</button>
+            </div>
+            <div id="loadingSpinner" class="flex justify-center my-12">
+                <div class="loading-spinner h-12 w-12"></div>
+            </div>
+            <div id="productsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Products will be loaded via API -->
+            </div>
+            <div id="noProducts" class="hidden text-center py-12">
+                <i class="fas fa-search text-5xl text-gray-300 mb-4"></i>
+                <h3 class="text-2xl font-bold text-gray-500">No products found</h3>
+                <p class="text-gray-400">Try searching for a different item</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section id="categories" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Shop by Category</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Everything you need for your home, neatly organized</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                <div class="bg-blue-50 rounded-2xl p-6 text-center card-hover">
+                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 category-icon">
+                        <i class="fas fa-cheese text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800">Fresh Dairy</h3>
+                    <p class="text-sm text-gray-600 mt-2">Milk, Curd, Paneer, Ghee</p>
+                </div>
+                <div class="bg-green-50 rounded-2xl p-6 text-center card-hover">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 category-icon">
+                        <i class="fas fa-carrot text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800">Vegetables</h3>
+                    <p class="text-sm text-gray-600 mt-2">Fresh & Organic</p>
+                </div>
+                <div class="bg-yellow-50 rounded-2xl p-6 text-center card-hover">
+                    <div class="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 category-icon">
+                        <i class="fas fa-wine-bottle text-yellow-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800">Beverages</h3>
+                    <p class="text-sm text-gray-600 mt-2">Juices, Tea, Coffee, Soft Drinks</p>
+                </div>
+                <div class="bg-purple-50 rounded-2xl p-6 text-center card-hover">
+                    <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 category-icon">
+                        <i class="fas fa-cookie text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800">Snacks</h3>
+                    <p class="text-sm text-gray-600 mt-2">Chips, Biscuits, Cookies</p>
+                </div>
+                <div class="bg-red-50 rounded-2xl p-6 text-center card-hover">
+                    <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 category-icon">
+                        <i class="fas fa-utensils text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800">Kitchen Essentials</h3>
+                    <p class="text-sm text-gray-600 mt-2">Spices, Oil, Flour, Rice</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-gray-900 text-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Visit Our Store</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto">We're here to serve you with a smile and quality products</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <div class="bg-gray-800 rounded-2xl p-8 shadow-xl">
+                        <h3 class="text-2xl font-bold mb-6">Store Information</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="bg-blue-500 p-3 rounded-lg mr-4">
+                                    <i class="fas fa-map-marker-alt text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg mb-1">Address</h4>
+                                    <p class="text-gray-300">Abhishek Dairy And General Store, Dhotti, Sai College Road, Waidhan, Singrauli, Madhya Pradesh, Pin Code: 486886</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-green-500 p-3 rounded-lg mr-4">
+                                    <i class="fas fa-phone-alt text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg mb-1">Phone Number</h4>
+                                    <p class="text-gray-300 text-xl font-bold">7879355368</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-yellow-500 p-3 rounded-lg mr-4">
+                                    <i class="fas fa-clock text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg mb-1">Opening Hours</h4>
+                                    <p class="text-gray-300">Monday - Sunday: 6:00 AM - 10:00 PM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="bg-gray-800 rounded-2xl p-8 shadow-xl h-full">
+                        <h3 class="text-2xl font-bold mb-6">Quick Contact</h3>
+                        <p class="text-gray-300 mb-6">Have questions or need home delivery? Reach out to us!</p>
+                        <div class="space-y-4">
+                            <a href="tel:7879355368" class="block bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl text-center transition">
+                                <i class="fas fa-phone-alt mr-2"></i>Call Now for Delivery
+                            </a>
+                            <a href="https://wa.me/917879355368" target="_blank" class="block bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-xl text-center transition">
+                                <i class="fab fa-whatsapp mr-2"></i>WhatsApp Order
+                            </a>
+                            <div class="bg-gray-700 rounded-xl p-4 text-center">
+                                <p class="text-gray-300">Home delivery available within 5km radius. Minimum order: ₹200</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 border-t border-gray-700 py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="bg-green-500 p-2 rounded-lg">
+                            <i class="fas fa-store text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Abhishek Dairy & General Store</h3>
+                    </div>
+                    <p class="text-gray-400">Serving Waidhan with quality products since 2010</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="tel:7879355368" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-phone-alt text-xl"></i>
+                    </a>
+                    <a href="https://wa.me/917879355368" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-whatsapp text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-map-marker-alt text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2023 Abhishek Dairy & General Store. All rights reserved.</p>
+                <p class="mt-2 text-sm">Designed with ❤️ for our valued customers</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp -->
+    <a href="https://wa.me/917879355368" target="_blank" class="fixed bottom-6 right-6 z-40 floating-whatsapp">
+        <div class="bg-green-500 text-white p-4 rounded-full shadow-2xl pulse-ring">
+            <i class="fab fa-whatsapp text-3xl"></i>
+        </div>
+    </a>
+
+    <!-- Back to Top -->
+    <button id="backToTop" class="fixed bottom-6 left-6 z-40 bg-blue-600 text-white p-3 rounded-full shadow-2xl hidden">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script>
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Back to Top Button
+        const backToTop = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTop.classList.remove('hidden');
+            } else {
+                backToTop.classList.add('hidden');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // API Integration for Products
+        const productsContainer = document.getElementById('productsContainer');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const noProducts = document.getElementById('noProducts');
+        const searchProduct = document.getElementById('searchProduct');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+
+        // Mock API URL (Replace with your actual API endpoint)
+        const API_URL = 'https://jsonplaceholder.typicode.com/posts?_limit=8'; // Using placeholder API
+        
+        // Simulate product data (In real scenario, fetch from your API)
+        const mockProducts = [
+            { id: 1, name: "Amul Taaza Milk (1L)", price: "₹80", category: "dairy", image: "https://fpsstore.in/cdn/shop/products/148715-2_2-amul-toned-milk.png?v=1641466845?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80", stock: "In Stock" },
+            { id: 2, name: "Amul Butter (500g)", price: "₹150", category: "dairy", image: "https://assets.hyperpure.com/data/images/products/03669d1e950fd601fd7963fc6827201e.jpg?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80", stock: "In Stock" },
+            { id: 3, name: "Basmati Rice (5kg)", price: "₹450", category: "grocery", image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80", stock: "In Stock" },
+            { id: 4, name: "Sunflower Oil (1L)", price: "₹180", category: "grocery", image: "https://5.imimg.com/data5/LN/BG/MY-19588085/sunlower-oil-500ml-500x500.png?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80", stock: "Low Stock" },
+            { id: 5, name: "Coca-Cola (2L)", price: "₹90", category: "beverages", image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80", stock: "In Stock" },
+            { id: 6, name: "Lays Chips (100g)", price: "₹20", category: "snacks", image: "https://pictures.grocerapps.com/original/grocerapp-lays-french-cheese-potato-chips-6544d6f87f309.jpeg?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80", stock: "In Stock" },
+            { id: 7, name: "Fresh Curd (500g)", price: "₹50", category: "dairy", image: "https://cdn.grofers.com/da/cms-assets/cms/product/2107cdc3-8d54-41fb-a7ee-89d8573b9f06.jpg?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80", stock: "In Stock" },
+            { id: 8, name: "Aashirvaad Atta (5kg)", price: "₹300", category: "grocery", image: "https://epkmart.com/wp-content/uploads/2020/12/aashirvaad-aata.png?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80", stock: "In Stock" }
+        ];
+
+        // Simulate API call with delay
+        function loadProducts() {
+            setTimeout(() => {
+                loadingSpinner.classList.add('hidden');
+                displayProducts(mockProducts);
+            }, 1000);
+        }
+
+        // Display products
+        function displayProducts(products) {
+            productsContainer.innerHTML = '';
+            
+            if (products.length === 0) {
+                noProducts.classList.remove('hidden');
+                return;
+            }
+            
+            noProducts.classList.add('hidden');
+            
+            products.forEach(product => {
+                const stockColor = product.stock === "In Stock" ? "text-green-600" : "text-red-600";
+                const stockBg = product.stock === "In Stock" ? "bg-green-100" : "bg-red-100";
+                
+                const productCard = document.createElement('div');
+                productCard.className = 'bg-white rounded-2xl shadow-lg overflow-hidden card-hover';
+                productCard.innerHTML = `
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
+                        <div class="absolute top-4 right-4 ${stockBg} ${stockColor} text-xs font-bold px-3 py-1 rounded-full">
+                            ${product.stock}
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-gray-800 text-lg mb-2">${product.name}</h3>
+                        <div class="flex justify-between items-center mt-4">
+                            <div>
+                                <span class="text-2xl font-bold text-blue-600">${product.price}</span>
+                            </div>
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition">
+                                <i class="fas fa-shopping-cart mr-2"></i>Add
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productsContainer.appendChild(productCard);
+            });
+        }
+
+        // Filter and search functionality
+        let currentCategory = 'all';
+        let currentSearch = '';
+
+        function filterProducts() {
+            let filtered = mockProducts;
+            
+            // Apply category filter
+            if (currentCategory !== 'all') {
+                filtered = filtered.filter(product => product.category === currentCategory);
+            }
+            
+            // Apply search filter
+            if (currentSearch.trim() !== '') {
+                const searchTerm = currentSearch.toLowerCase();
+                filtered = filtered.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            displayProducts(filtered);
+        }
+
+        // Event listeners for filter buttons
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active button
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('bg-blue-600', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-700');
+                });
+                
+                button.classList.remove('bg-gray-200', 'text-gray-700');
+                button.classList.add('bg-blue-600', 'text-white');
+                
+                // Update category and filter
+                currentCategory = button.dataset.category;
+                filterProducts();
+            });
+        });
+
+        // Event listener for search input
+        searchProduct.addEventListener('input', (e) => {
+            currentSearch = e.target.value;
+            filterProducts();
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProducts();
+        });
+    </script>
+</body>
+</html>
