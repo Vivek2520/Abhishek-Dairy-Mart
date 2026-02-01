@@ -196,30 +196,26 @@
     </header>
 
     <!-- Hero Section -->
-    <section id="home" class="hero-gradient py-16 md:py-24 text-white" style="will-change: transform;">
+    <section id="home" class="py-16 md:py-24 text-white"
+        style="will-change: transform; background-image: url('Website.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row items-center justify-between">
                 <div class="md:w-1/2 mb-10 md:mb-0">
-                    <h2 class="text-4xl md:text-5xl font-bold mb-4">Fresh Dairy & Daily Essentials Delivered</h2>
-                    <p class="text-xl mb-6 opacity-90">Your trusted neighborhood Kirana store providing quality products
-                        with home delivery in Waidhan, Singrauli.</p>
+                    <h2 class="text-5xl md:text-6xl font-bold mb-4 text-black">FRESH DAIRY & DAILY ESSENTIALS DELEVERED
+                    </h2>
+                    <p class="text-3xl mb-8 opacity-90 text-black">Your Trusted Neighborhood Kirana Store Providing
+                        Quality
+                        Products with Home Delivery in Waidhan, Singrauli.</p>
+                    <p class="text-2xl mb-6 opacity-90 text-black">Save Big on Your Favorite Brands</p>
                     <div class="flex flex-wrap gap-4">
                         <a href="tel:7879355368"
-                            class="bg-gray-600 border border-white text-white font-bold py-3 px-6 rounded-full hover:bg-white hover:text-blue-600 transition">
+                            class="bg-red-600 border border-white text-white font-bold py-3 px-6 rounded-full hover:bg-white hover:text-blue-600 transition">
                             <i class="fas fa-phone-alt mr-2"></i>Call Now
                         </a>
                         <a href="https://maps.app.goo.gl/82n2kAmGKj7sizYS6" target="_blank"
-                            class="bg-gray-600 border border-white text-white font-bold py-3 px-6 rounded-full hover:bg-white hover:text-blue-600 transition">
+                            class="bg-red-600 border border-white text-white font-bold py-3 px-6 rounded-full hover:bg-white hover:text-blue-600 transition">
                             <i class="fas fa-map-marker-alt mr-2"></i>Visit Store
                         </a>
-                    </div>
-                </div>
-                <div class="md:w-1/2 flex justify-center">
-                    <div class="relative">
-                        <img src="grocery-png-11553955863lmkxrk7ihy-removebg-preview.png" alt="Kirana Store"
-                            class="rounded-xl w-full max-w-lg drop-shadow-2xl">
-                        <div class="absolute -bottom-6 -right-6 bg-white rounded-lg shadow-2xl p-0 overflow-hidden">
-                        </div>
                     </div>
                 </div>
             </div>
@@ -381,7 +377,7 @@
                                 <i class="fab fa-whatsapp mr-2"></i>WhatsApp Order
                             </a>
                             <div class="bg-gray-700 rounded-xl p-4 text-center">
-                                <p class="text-gray-300">Home delivery available within 5km radius. Minimum order: ₹1000
+                                <p class="text-gray-300">Home delivery available within 5km radius. Minimum order: ₹299
                                 </p>
                             </div>
                         </div>
@@ -891,6 +887,15 @@
             },
 
             sendOrder() {
+                const subtotal = this.getTotal();
+                const delivery = 50;
+                const total = subtotal + delivery;
+
+                if (total <= 299) {
+                    alert('❌ Minimum order value is ₹299. Please add more products to reach the minimum order value.');
+                    return;
+                }
+
                 const message = this.generateWhatsAppMessage();
                 if (message) {
                     const encodedMessage = encodeURIComponent(message);
