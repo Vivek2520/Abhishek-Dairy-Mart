@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Abhishek Dairy Admin</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        :root {
+            --primary: #4F46E5;
+            --primary-dark: #4338CA;
+            --secondary: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+        }
+
+        .sidebar {
+            transition: all 0.3s;
+        }
+
+        .sidebar-item {
+            transition: all 0.2s;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(79, 70, 229, 0.1);
+        }
+
+        .sidebar-item.active {
+            background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%);
+            color: white;
+        }
+
+        .card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            opacity: 0.1;
+            transform: translate(30%, -30%);
+        }
+
+        .stat-card.primary::before {
+            background: #4F46E5;
+        }
+
+        .stat-card.success::before {
+            background: #10B981;
+        }
+
+        .stat-card.warning::before {
+            background: #F59E0B;
+        }
+
+        .stat-card.danger::before {
+            background: #EF4444;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            min-width: 100%;
+        }
+
+        .data-table th {
+            background: #F9FAFB;
+            font-weight: 600;
+            color: #374151;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        .data-table td {
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .data-table tr:hover {
+            background: #F9FAFB;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge-warning {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-danger {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .badge-info {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .badge-neutral {
+            background: #F3F4F6;
+            color: #374151;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            z-index: 50;
+            min-width: 12rem;
+            margin-top: 0.5rem;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s;
+        }
+
+        .dropdown.open .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 32rem;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: white;
+            border-radius: 1rem;
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+
+        .modal.open .modal-content {
+            transform: scale(1);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #E5E7EB;
+            border-top-color: #4F46E5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 60;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            color: white;
+            font-weight: 500;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-success {
+            background: #10B981;
+        }
+
+        .toast-error {
+            background: #EF4444;
+        }
+
+        .toast-warning {
+            background: #F59E0B;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F3F4F6;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9CA3AF;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                top: 0;
+                bottom: 0;
+                z-index: 40;
+                width: 280px;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 30;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s;
+            }
+
+            .sidebar-overlay.open {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <!-- Sidebar Overlay (Mobile) -->
+    <div id="sidebarOverlay" class="sidebar-overlay lg:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar"
+        class="sidebar fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-gray-200 z-40 flex flex-col">
+        <!-- Logo -->
+        <div class="h-16 flex items-center justify-between px-4 border-b border-gray-200">
+            <div class="flex items-center space-x-2">
+                <div
+                    class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-store text-white text-lg"></i>
+                </div>
+                <span class="text-lg font-bold text-gray-800">Admin Panel</span>
+            </div>
+            <button id="closeSidebar" class="lg:hidden text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto py-4 px-3">
+            <ul class="space-y-1">
+                <li>
+                    <a href="#"
+                        class="sidebar-item active flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700"
+                        data-page="dashboard">
+                        <i class="fas fa-th-large w-5"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700"
+                        data-page="products">
+                        <i class="fas fa-box w-5"></i>
+                        <span>Products</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700"
+                        data-page="orders">
+                        <i class="fas fa-shopping-cart w-5"></i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700"
+                        data-page="users">
+                        <i class="fas fa-users w-5"></i>
+                        <span>Users</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700"
+                        data-page="categories">
+                        <i class="fas fa-tags w-5"></i>
+                        <span>Categories</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700"
+                        data-page="coupons">
+                        <i class="fas fa-ticket-alt w-5"></i>
+                        <span>Coupons</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700"
+                        data-page="inventory">
+                        <i class="fas fa-warehouse w-5"></i>
+                        <span>Inventory</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700"
+                        data-page="reports">
+                        <i class="fas fa-chart-bar w-5"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700"
+                        data-page="settings">
+                        <i class="fas fa-cog w-5"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Logout -->
+        <div class="p-3 border-t border-gray-200">
+            <button id="logoutBtn"
+                class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors">
+                <i class="fas fa-sign-out-alt w-5"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="lg:ml-64 min-h-screen flex flex-col">
+        <!-- Top Bar -->
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sticky top-0 z-20">
+            <div class="flex items-center space-x-4">
+                <button id="openSidebar" class="lg:hidden text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <h1 id="pageTitle" class="text-xl font-semibold text-gray-800">Dashboard</h1>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <!-- Notifications -->
+                <div class="relative">
+                    <button class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg relative">
+                        <i class="fas fa-bell text-lg"></i>
+                        <span id="notificationBadge"
+                            class="hidden absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                </div>
+
+                <!-- Profile -->
+                <div class="dropdown" id="profileDropdown">
+                    <button class="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-lg">
+                        <div
+                            class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
+                            <span id="adminInitials" class="text-white text-sm font-medium">A</span>
+                        </div>
+                        <span id="adminName" class="hidden md:block text-sm font-medium text-gray-700">Admin</span>
+                        <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                            data-page="profile">
+                            <i class="fas fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                        <a href="#" class="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                            data-page="settings">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                        <hr class="my-1">
+                        <button id="dropdownLogout"
+                            class="w-full flex items-center space-x-2 px-4 py-2 text-red-600 hover:bg-red-50">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main id="mainContent" class="flex-1 p-4 md:p-6">
+            <!-- Dashboard Page -->
+            <div id="page-dashboard" class="page-content">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="card stat-card primary bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500 mb-1">Today's Orders</p>
+                                <p id="statOrders" class="text-2xl font-bold text-gray-800">0</p>
+                            </div>
+                            <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-shopping-cart text-indigo-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2"><span id="ordersChange" class="text-green-500">+0%</span>
+                            from yesterday</p>
+                    </div>
+
+                    <div class="card stat-card success bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500 mb-1">Today's Revenue</p>
+                                <p id="statRevenue" class="text-2xl font-bold text-gray-800">₹0</p>
+                            </div>
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-rupee-sign text-green-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2"><span id="revenueChange" class="text-green-500">+0%</span>
+                            from yesterday</p>
+                    </div>
+
+                    <div class="card stat-card warning bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500 mb-1">Pending Orders</p>
+                                <p id="statPending" class="text-2xl font-bold text-gray-800">0</p>
+                            </div>
+                            <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Requires attention</p>
+                    </div>
+
+                    <div class="card stat-card danger bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-500 mb-1">Low Stock</p>
+                                <p id="statLowStock" class="text-2xl font-bold text-gray-800">0</p>
+                            </div>
+                            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Products below threshold</p>
+                    </div>
+                </div>
+
+                <!-- Charts & Recent Orders -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <!-- Sales Chart -->
+                    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Sales Overview</h3>
+                            <select id="chartPeriod"
+                                class="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                        <div class="h-72">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Top Products -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Top Products</h3>
+                        <div id="topProductsList" class="space-y-3">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders Table -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                    <div class="flex items-center justify-between p-5 border-b border-gray-100">
+                        <h3 class="text-lg font-semibold text-gray-800">Recent Orders</h3>
+                        <a href="#" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+                            data-page="orders">View All</a>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="px-5 py-3 text-left">Order ID</th>
+                                    <th class="px-5 py-3 text-left">Customer</th>
+                                    <th class="px-5 py-3 text-left">Items</th>
+                                    <th class="px-5 py-3 text-left">Total</th>
+                                    <th class="px-5 py-3 text-left">Status</th>
+                                    <th class="px-5 py-3 text-left">Date</th>
+                                    <th class="px-5 py-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentOrdersTable">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Page -->
+            <div id="page-products" class="page-content hidden">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                    <div class="flex items-center justify-between p-5 border-b border-gray-100">
+                        <div class="flex items-center space-x-4">
+                            <div class="relative">
+                                <input type="text" id="productSearch" placeholder="Search products..."
+                                    class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-64">
+                                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            </div>
+                            <select id="productCategoryFilter"
+                                class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <option value="">All Categories</option>
+                            </select>
+                            <select id="productStatusFilter"
+                                class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <button id="addProductBtn"
+                            class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center space-x-2">
+                            <i class="fas fa-plus"></i>
+                            <span>Add Product</span>
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="px-5 py-3 text-left">
+                                        <input type="checkbox" id="selectAllProducts" class="rounded border-gray-300">
+                                    </th>
+                                    <th class="px-5 py-3 text-left">Product</th>
+                                    <th class="px-5 py-3 text-left">Category</th>
+                                    <th class="px-5 py-3 text-left">Price</th>
+                                    <th class="px-5 py-3 text-left">Stock</th>
+                                    <th class="px-5 py-3 text-left">Status</th>
+                                    <th class="px-5 py-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTable">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex items-center justify-between p-5 border-t border-gray-100">
+                        <p id="productsCount" class="text-sm text-gray-500">Showing 0 products</p>
+                        <div id="productsPagination" class="flex items-center space-x-2">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Page -->
+            <div id="page-orders" class="page-content hidden">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                    <div class="flex items-center justify-between p-5 border-b border-gray-100">
+                        <div class="flex items-center space-x-4">
+                            <div class="relative">
+                                <input type="text" id="orderSearch" placeholder="Search orders..."
+                                    class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-64">
+                                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            </div>
+                            <input type="date" id="orderDateFrom"
+                                class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <input type="date" id="orderDateTo"
+                                class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <select id="orderStatusFilter"
+                                class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="processing">Processing</option>
+                                <option value="shipped">Shipped</option>
+                                <option value="delivered">Delivered</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="px-5 py-3 text-left">Order ID</th>
+                                    <th class="px-5 py-3 text-left">Customer</th>
+                                    <th class="px-5 py-3 text-left">Items</th>
+                                    <th class="px-5 py-3 text-left">Total</th>
+                                    <th class="px-5 py-3 text-left">Payment</th>
+                                    <th class="px-5 py-3 text-left">Status</th>
+                                    <th class="px-5 py-3 text-left">Date</th>
+                                    <th class="px-5 py-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTable">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex items-center justify-between p-5 border-t border-gray-100">
+                        <p id="ordersCount" class="text-sm text-gray-500">Showing 0 orders</p>
+                        <div id="ordersPagination" class="flex items-center space-x-2">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Page -->
+            <div id="page-users" class="page-content hidden">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                    <div class="flex items-center justify-between p-5 border-b border-gray-100">
+                        <div class="flex items-center space-x-4">
+                            <div class="relative">
+                                <input type="text" id="userSearch" placeholder="Search users..."
+                                    class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-64">
+                                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            </div>
+                            <select id="userStatusFilter"
+                                class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="blocked">Blocked</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="px-5 py-3 text-left">User</th>
+                                    <th class="px-5 py-3 text-left">Email</th>
+                                    <th class="px-5 py-3 text-left">Phone</th>
+                                    <th class="px-5 py-3 text-left">Orders</th>
+                                    <th class="px-5 py-3 text-left">Joined</th>
+                                    <th class="px-5 py-3 text-left">Status</th>
+                                    <th class="px-5 py-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTable">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories Page -->
+            <div id="page-categories" class="page-content hidden">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Categories</h3>
+                        <button id="addCategoryBtn"
+                            class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Add Category
+                        </button>
+                    </div>
+                    <div id="categoriesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coupons Page -->
+            <div id="page-coupons" class="page-content hidden">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Coupons</h3>
+                        <button id="addCouponBtn"
+                            class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Add Coupon
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="px-5 py-3 text-left">Code</th>
+                                    <th class="px-5 py-3 text-left">Type</th>
+                                    <th class="px-5 py-3 text-left">Value</th>
+                                    <th class="px-5 py-3 text-left">Min Order</th>
+                                    <th class="px-5 py-3 text-left">Used</th>
+                                    <th class="px-5 py-3 text-left">Expiry</th>
+                                    <th class="px-5 py-3 text-left">Status</th>
+                                    <th class="px-5 py-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="couponsTable">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Page -->
+            <div id="page-inventory" class="page-content hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Low Stock Alerts -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Low Stock Alerts</h3>
+                        <div id="lowStockList" class="space-y-3">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Stock Adjustment -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Adjust Stock</h3>
+                        <form id="stockAdjustmentForm" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Product</label>
+                                <select id="adjustProduct"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <option value="">Select Product</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Adjustment Type</label>
+                                <select id="adjustType"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <option value="add">Add Stock</option>
+                                    <option value="remove">Remove Stock</option>
+                                    <option value="set">Set Stock</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                                <input type="number" id="adjustQuantity" min="0"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Reason</label>
+                                <input type="text" id="adjustReason" placeholder="e.g., Received shipment"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <button type="submit"
+                                class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                                Update Stock
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Page -->
+            <div id="page-reports" class="page-content hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Sales Report</h3>
+                            <div class="flex space-x-4">
+                                <button id="exportOrdersBtn"
+                                    class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                                    <i class="fas fa-download mr-1"></i>Export Orders
+                                </button>
+                                <button id="exportUsersBtn"
+                                    class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                                    <i class="fas fa-download mr-1"></i>Export Users
+                                </button>
+                            </div>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="salesReportChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">User Insights</h3>
+                        </div>
+                        <div id="userInsights" class="space-y-4">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="page-settings" class="page-content hidden">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Store Settings</h3>
+                    <form id="settingsForm" class="space-y-4 max-w-2xl">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Store Name</label>
+                                <input type="text" id="storeName"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Contact Email</label>
+                                <input type="email" id="storeEmail"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Contact Phone</label>
+                                <input type="tel" id="storePhone"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tax Rate (%)</label>
+                                <input type="number" id="taxRate" step="0.01"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Shipping Charge (₹)</label>
+                                <input type="number" id="shippingCharge"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Free Shipping Above
+                                    (₹)</label>
+                                <input type="number" id="freeShippingAbove"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                        </div>
+                        <button type="submit"
+                            class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                            Save Settings
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t border-gray-200 py-4 px-6">
+            <div class="flex items-center justify-between text-sm text-gray-500">
+                <p>&copy; 2024 Abhishek Dairy & General Store. All rights reserved.</p>
+                <p>Version 2.0.0</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 id="modalTitle" class="text-lg font-semibold text-gray-800">Modal Title</h3>
+                <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="modalBody">
+                <!-- Modal content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">
+        <span id="toastMessage">Message</span>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-white/80 z-50 flex items-center justify-center hidden">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <script>
+        // ========================================
+        // CONFIG & STATE
+        // ========================================
+        const API_BASE = '/api/admin';
+
+        let currentPage = 'dashboard';
+        let products = [];
+        let orders = [];
+        let users = [];
+        let categories = [];
+        let coupons = [];
+        let settings = {};
+
+        // ========================================
+        // API HELPERS (No auth required)
+        // ========================================
+        async function apiCall(endpoint, options = {}) {
+            const csrfToken = localStorage.getItem('csrfToken') || '';
+
+            const response = await fetch(`${API_BASE}${endpoint}`, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken,
+                    ...options.headers
+                }
+            });
+
+            const data = await response.json();
+            if (!data.success && response.status !== 200) {
+                throw new Error(data.message || 'API Error');
+            }
+            return data;
+        }
+
+        // ========================================
+        // UI HELPERS
+        // ========================================
+        function showLoading(show = true) {
+            document.getElementById('loadingOverlay').classList.toggle('hidden', !show);
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toast.className = `toast toast-${type}`;
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function showModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('modal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('open');
+        }
+
+        function formatCurrency(amount) {
+            return '₹' + parseFloat(amount || 0).toFixed(2);
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+
+        function formatDateTime(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // ========================================
+        // SIDEBAR
+        // ========================================
+        function initSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const openBtn = document.getElementById('openSidebar');
+            const closeBtn = document.getElementById('closeSidebar');
+
+            openBtn?.addEventListener('click', () => {
+                sidebar.classList.add('open');
+                sidebarOverlay.classList.add('open');
+            });
+
+            closeBtn?.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('open');
+            });
+
+            sidebarOverlay?.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('open');
+            });
+
+            // Navigation
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = item.dataset.page;
+                    navigateTo(page);
+                });
+            });
+
+            // Dropdown toggle
+            const profileDropdown = document.getElementById('profileDropdown');
+            profileDropdown?.querySelector('button')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('open');
+            });
+
+            document.addEventListener('click', () => {
+                profileDropdown?.classList.remove('open');
+            });
+        }
+
+        function navigateTo(page) {
+            currentPage = page;
+
+            // Update sidebar active state
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.page === page);
+            });
+
+            // Update page title
+            const titles = {
+                dashboard: 'Dashboard',
+                products: 'Products',
+                orders: 'Orders',
+                users: 'Users',
+                categories: 'Categories',
+                coupons: 'Coupons',
+                inventory: 'Inventory',
+                reports: 'Reports',
+                settings: 'Settings'
+            };
+            document.getElementById('pageTitle').textContent = titles[page] || 'Dashboard';
+
+            // Show/hide pages
+            document.querySelectorAll('.page-content').forEach(p => {
+                p.classList.add('hidden');
+            });
+            document.getElementById(`page-${page}`)?.classList.remove('hidden');
+
+            // Close mobile sidebar
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarOverlay').classList.remove('open');
+
+            // Load page data
+            loadPageData(page);
+        }
+
+        // ========================================
+        // PAGE DATA LOADING
+        // ========================================
+        async function loadPageData(page) {
+            // attach export button behavior when reports page is loaded
+            if (page === 'reports') {
+                const ordersBtn = document.getElementById('exportOrdersBtn');
+                if (ordersBtn) {
+                    ordersBtn.addEventListener('click', () => {
+                        window.location.href = '/api/admin/exports/orders';
+                    });
+                }
+                const usersBtn = document.getElementById('exportUsersBtn');
+                if (usersBtn) {
+                    usersBtn.addEventListener('click', () => {
+                        window.location.href = '/api/admin/exports/users';
+                    });
+                }
+            }
+
+            try {
+                switch (page) {
+                    case 'dashboard':
+                        await loadDashboard();
+                        break;
+                    case 'products':
+                        await loadProducts();
+                        break;
+                    case 'orders':
+                        await loadOrders();
+                        break;
+                    case 'users':
+                        await loadUsers();
+                        break;
+                    case 'categories':
+                        await loadCategories();
+                        break;
+                    case 'coupons':
+                        await loadCoupons();
+                        break;
+                    case 'inventory':
+                        await loadInventory();
+                        break;
+                    case 'reports':
+                        await loadReports();
+                        break;
+                    case 'settings':
+                        await loadSettings();
+                        break;
+                }
+            } catch (error) {
+                console.error('Error loading page data:', error);
+                showToast(error.message, 'error');
+            }
+        }
+
+        // ========================================
+        // DASHBOARD
+        // ========================================
+        let salesChart = null;
+
+        async function loadDashboard() {
+            showLoading();
+            try {
+                const [metricsRes, chartRes, topProductsRes, recentOrdersRes] = await Promise.all([
+                    apiCall('/dashboard/metrics'),
+                    apiCall('/dashboard/charts?period=daily'),
+                    apiCall('/dashboard/top-products?limit=5'),
+                    apiCall('/dashboard/recent-orders?limit=5')
+                ]);
+
+                // Update stats
+                const metrics = metricsRes.data || {};
+                document.getElementById('statOrders').textContent = metrics.todayOrders || 0;
+                document.getElementById('statRevenue').textContent = formatCurrency(metrics.todayRevenue || 0);
+                document.getElementById('statPending').textContent = metrics.pendingOrders || 0;
+                document.getElementById('statLowStock').textContent = metrics.lowStockItems || 0;
+
+                // Update changes
+                const ordersChange = metrics.ordersChange || 0;
+                const revenueChange = metrics.revenueChange || 0;
+                document.getElementById('ordersChange').textContent = `${ordersChange >= 0 ? '+' : ''}${ordersChange}%`;
+                document.getElementById('ordersChange').className = ordersChange >= 0 ? 'text-green-500' : 'text-red-500';
+                document.getElementById('revenueChange').textContent = `${revenueChange >= 0 ? '+' : ''}${revenueChange}%`;
+                document.getElementById('revenueChange').className = revenueChange >= 0 ? 'text-green-500' : 'text-red-500';
+
+                // Sales chart
+                renderSalesChart(chartRes.data || []);
+
+                // Top products
+                renderTopProducts(topProductsRes.data || []);
+
+                // Recent orders
+                renderRecentOrders(recentOrdersRes.data || []);
+
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                // Use mock data for demo
+                renderDemoDashboard();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function renderDemoDashboard() {
+            document.getElementById('statOrders').textContent = '24';
+            document.getElementById('statRevenue').textContent = '₹12,450';
+            document.getElementById('statPending').textContent = '5';
+            document.getElementById('statLowStock').textContent = '3';
+
+            // Demo chart data
+            const demoChartData = [12, 19, 8, 15, 22, 18, 25];
+            renderSalesChart(demoChartData.map((v, i) => ({ date: `Day ${i + 1}`, total: v * 1000 })));
+
+            // Demo top products
+            renderTopProducts([
+                { name: 'Amul Butter', sold: 45 },
+                { name: 'Amul Milk 1L', sold: 38 },
+                { name: 'Amul Curd', sold: 32 },
+                { name: 'Amul Cheese', sold: 28 },
+                { name: 'Haldiram Bhujia', sold: 22 }
+            ]);
+
+            // Demo recent orders
+            renderRecentOrders([
+                { orderId: 'ORD001', customerName: 'John Doe', items: [{ name: 'Amul Butter', qty: 2 }], total: 180, status: 'pending', createdAt: new Date().toISOString() },
+                { orderId: 'ORD002', customerName: 'Jane Smith', items: [{ name: 'Amul Milk', qty: 3 }], total: 150, status: 'processing', createdAt: new Date().toISOString() },
+                { orderId: 'ORD003', customerName: 'Bob Wilson', items: [{ name: 'Amul Curd', qty: 1 }], total: 50, status: 'delivered', createdAt: new Date().toISOString() }
+            ]);
+        }
+
+        function renderSalesChart(data) {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+
+            if (salesChart) {
+                salesChart.destroy();
+            }
+
+            const labels = data.map(d => d.date || d.label || 'N/A');
+            const values = data.map(d => d.total || d.value || 0);
+
+            salesChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Sales',
+                        data: values,
+                        borderColor: '#4F46E5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#4F46E5',
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#F3F4F6' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderTopProducts(products) {
+            const container = document.getElementById('topProductsList');
+            const maxSold = Math.max(...products.map(p => p.sold || 0), 1);
+
+            container.innerHTML = products.map((p, i) => `
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-semibold text-sm">
+                        ${i + 1}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-800 truncate">${p.name || 'Unknown'}</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                            <div class="bg-indigo-600 h-2 rounded-full" style="width: ${(p.sold / maxSold) * 100}%"></div>
+                        </div>
+                    </div>
+                    <span class="text-sm font-semibold text-gray-600">${p.sold || 0}</span>
+                </div>
+            `).join('') || '<p class="text-gray-500 text-sm">No products yet</p>';
+        }
+
+        function renderRecentOrders(orders) {
+            const tbody = document.getElementById('recentOrdersTable');
+
+            const statusColors = {
+                pending: 'badge-warning',
+                processing: 'badge-info',
+                shipped: 'badge-info',
+                delivered: 'badge-success',
+                cancelled: 'badge-danger'
+            };
+
+            tbody.innerHTML = orders.map(order => `
+                <tr>
+                    <td class="px-5 py-4">
+                        <span class="font-medium text-gray-800">${order.orderId || 'N/A'}</span>
+                    </td>
+                    <td class="px-5 py-4 text-gray-600">${order.customerName || 'Unknown'}</td>
+                    <td class="px-5 py-4 text-gray-600">${order.items?.length || 0} items</td>
+                    <td class="px-5 py-4 font-medium text-gray-800">${formatCurrency(order.total)}</td>
+                    <td class="px-5 py-4">
+                        <span class="badge ${statusColors[order.status] || 'badge-neutral'}">${order.status || 'unknown'}</span>
+                    </td>
+                    <td class="px-5 py-4 text-gray-600">${formatDate(order.createdAt)}</td>
+                    <td class="px-5 py-4 text-right">
+                        <button class="text-indigo-600 hover:text-indigo-800 p-1" title="View">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="7" class="px-5 py-8 text-center text-gray-500">No orders yet</td></tr>';
+        }
+
+        // ========================================
+        // PRODUCTS
+        // ========================================
+        async function loadProducts() {
+            showLoading();
+            try {
+                const res = await apiCall('/products');
+                products = res.data || [];
+                renderProducts();
+
+                // Load categories for filter
+                const catRes = await apiCall('/categories');
+                categories = catRes.data || [];
+                renderCategoryFilter();
+            } catch (error) {
+                console.error('Error loading products:', error);
+                // Demo data
+                products = [
+                    { id: 1, name: 'Amul Butter 500g', category: 'Dairy', price: 225, stock: 50, status: 'active', image: '' },
+                    { id: 2, name: 'Amul Milk 1L', category: 'Dairy', price: 55, stock: 100, status: 'active', image: '' },
+                    { id: 3, name: 'Amul Curd 400g', category: 'Dairy', price: 40, stock: 8, status: 'active', image: '' },
+                    { id: 4, name: 'Haldiram Aloo Bhujia', category: 'Snacks', price: 65, stock: 25, status: 'active', image: '' },
+                    { id: 5, name: 'Parle-G Biscuit', category: 'Biscuits', price: 30, stock: 0, status: 'inactive', image: '' }
+                ];
+                renderProducts();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function renderProducts() {
+            const tbody = document.getElementById('productsTable');
+            const searchTerm = document.getElementById('productSearch')?.value?.toLowerCase() || '';
+            const categoryFilter = document.getElementById('productCategoryFilter')?.value || '';
+            const statusFilter = document.getElementById('productStatusFilter')?.value || '';
+
+            let filtered = products.filter(p => {
+                const matchSearch = p.name?.toLowerCase().includes(searchTerm);
+                const matchCategory = !categoryFilter || p.category === categoryFilter;
+                const matchStatus = !statusFilter || p.status === statusFilter;
+                return matchSearch && matchCategory && matchStatus;
+            });
+
+            tbody.innerHTML = filtered.map(product => `
+                <tr>
+                    <td class="px-5 py-4">
+                        <input type="checkbox" class="rounded border-gray-300 product-checkbox" value="${product.id}">
+                    </td>
+                    <td class="px-5 py-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-image text-gray-400"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">${product.name || 'Unnamed'}</span>
+                        </div>
+                    </td>
+                    <td class="px-5 py-4 text-gray-600">${product.category || '-'}</td>
+                    <td class="px-5 py-4 font-medium text-gray-800">${formatCurrency(product.price)}</td>
+                    <td class="px-5 py-4">
+                        <span class="${(product.stock || 0) < 10 ? 'text-red-600 font-medium' : 'text-gray-600'}">${product.stock || 0}</span>
+                    </td>
+                    <td class="px-5 py-4">
+                        <span class="badge ${product.status === 'active' ? 'badge-success' : 'badge-neutral'}">${product.status || 'inactive'}</span>
+                    </td>
+                    <td class="px-5 py-4 text-right">
+                        <button class="text-indigo-600 hover:text-indigo-800 p-1" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="text-red-600 hover:text-red-800 p-1 ml-2" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="7" class="px-5 py-8 text-center text-gray-500">No products found</td></tr>';
+
+            document.getElementById('productsCount').textContent = `Showing ${filtered.length} products`;
+        }
+
+        function renderCategoryFilter() {
+            const select = document.getElementById('productCategoryFilter');
+            const uniqueCategories = [...new Set(products.map(p => p.category).filter(Boolean))];
+
+            select.innerHTML = '<option value="">All Categories</option>' +
+                uniqueCategories.map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        // ========================================
+        // ORDERS
+        // ========================================
+        async function loadOrders() {
+            showLoading();
+            try {
+                const res = await apiCall('/orders');
+                orders = res.data || [];
+                renderOrders();
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                orders = [
+                    { orderId: 'ORD001', customerName: 'John Doe', customerPhone: '9876543210', items: [{ name: 'Amul Butter', qty: 2, price: 225 }], total: 450, paymentStatus: 'paid', status: 'pending', createdAt: new Date().toISOString() },
+                    { orderId: 'ORD002', customerName: 'Jane Smith', customerPhone: '9876543211', items: [{ name: 'Amul Milk', qty: 3, price: 55 }], total: 165, paymentStatus: 'paid', status: 'processing', createdAt: new Date().toISOString() }
+                ];
+                renderOrders();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function renderOrders() {
+            const tbody = document.getElementById('ordersTable');
+            const statusColors = {
+                pending: 'badge-warning',
+                processing: 'badge-info',
+                shipped: 'badge-info',
+                delivered: 'badge-success',
+                cancelled: 'badge-danger'
+            };
+
+            tbody.innerHTML = orders.map(order => `
+                <tr>
+                    <td class="px-5 py-4">
+                        <span class="font-medium text-gray-800">${order.orderId || 'N/A'}</span>
+                    </td>
+                    <td class="px-5 py-4">
+                        <div>
+                            <p class="font-medium text-gray-800">${order.customerName || 'Unknown'}</p>
+                            <p class="text-sm text-gray-500">${order.customerPhone || ''}</p>
+                        </div>
+                    </td>
+                    <td class="px-5 py-4 text-gray-600">${order.items?.length || 0} items</td>
+                    <td class="px-5 py-4 font-medium text-gray-800">${formatCurrency(order.total)}</td>
+                    <td class="px-5 py-4">
+                        <span class="badge ${order.paymentStatus === 'paid' ? 'badge-success' : 'badge-warning'}">${order.paymentStatus || 'pending'}</span>
+                    </td>
+                    <td class="px-5 py-4">
+                        <span class="badge ${statusColors[order.status] || 'badge-neutral'}">${order.status || 'pending'}</span>
+                    </td>
+                    <td class="px-5 py-4 text-gray-600">${formatDate(order.createdAt)}</td>
+                    <td class="px-5 py-4 text-right">
+                        <button class="text-indigo-600 hover:text-indigo-800 p-1" title="View">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="text-green-600 hover:text-green-800 p-1 ml-2" title="Update Status">
+                            <i class="fas fa-sync"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="8" class="px-5 py-8 text-center text-gray-500">No orders found</td></tr>';
+
+            document.getElementById('ordersCount').textContent = `Showing ${orders.length} orders`;
+        }
+
+        // ========================================
+        // USERS
+        // ========================================
+        async function loadUsers() {
+            showLoading();
+            try {
+                const res = await apiCall('/users');
+                users = res.data || [];
+                renderUsers();
+            } catch (error) {
+                console.error('Error loading users:', error);
+                users = [
+                    { id: 1, name: 'John Doe', email: 'john@example.com', phone: '9876543210', totalOrders: 5, status: 'active', createdAt: '2024-01-15' },
+                    { id: 2, name: 'Jane Smith', email: 'jane@example.com', phone: '9876543211', totalOrders: 12, status: 'active', createdAt: '2024-02-01' }
+                ];
+                renderUsers();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function renderUsers() {
+            const tbody = document.getElementById('usersTable');
+
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td class="px-5 py-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-medium">
+                                ${(user.name || 'U').charAt(0).toUpperCase()}
+                            </div>
+                            <span class="font-medium text-gray-800">${user.name || 'Unknown'}</span>
+                        </div>
+                    </td>
+                    <td class="px-5 py-4 text-gray-600">${user.email || '-'}</td>
+                    <td class="px-5 py-4 text-gray-600">${user.phone || '-'}</td>
+                    <td class="px-5 py-4 text-gray-600">${user.totalOrders || 0}</td>
+                    <td class="px-5 py-4 text-gray-600">${formatDate(user.createdAt)}</td>
+                    <td class="px-5 py-4">
+                        <span class="badge ${user.status === 'active' ? 'badge-success' : 'badge-danger'}">${user.status || 'active'}</span>
+                    </td>
+                    <td class="px-5 py-4 text-right">
+                        <button class="text-indigo-600 hover:text-indigo-800 p-1" title="View">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="text-gray-600 hover:text-gray-800 p-1 ml-2" title="${user.status === 'active' ? 'Block' : 'Unblock'}">
+                            <i class="fas fa-${user.status === 'active' ? 'ban' : 'check'}"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="7" class="px-5 py-8 text-center text-gray-500">No users found</td></tr>';
+        }
+
+        // ========================================
+        // CATEGORIES
+        // ========================================
+        async function loadCategories() {
+            showLoading();
+            try {
+                const res = await apiCall('/categories');
+                categories = res.data || [];
+                renderCategories();
+            } catch (error) {
+                console.error('Error loading categories:', error);
+                categories = [
+                    { id: 1, name: 'Dairy', description: 'Milk and dairy products', productCount: 25 },
+                    { id: 2, name: 'Snacks', description: 'Namkeen and snacks', productCount: 18 },
+                    { id: 3, name: 'Biscuits', description: 'Biscuits and cookies', productCount: 12 }
+                ];
+                renderCategories();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categoriesList');
+
+            container.innerHTML = categories.map(cat => `
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="font-semibold text-gray-800">${cat.name || 'Unnamed'}</h4>
+                        <div class="flex space-x-2">
+                            <button class="text-indigo-600 hover:text-indigo-800"><i class="fas fa-edit"></i></button>
+                            <button class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-2">${cat.description || ''}</p>
+                    <span class="text-xs text-gray-400">${cat.productCount || 0} products</span>
+                </div>
+            `).join('') || '<p class="text-gray-500 col-span-3 text-center py-8">No categories found</p>';
+        }
+
+        // ========================================
+        // COUPONS
+        // ========================================
+        async function loadCoupons() {
+            showLoading();
+            try {
+                const res = await apiCall('/coupons');
+                coupons = res.data || [];
+                renderCoupons();
+            } catch (error) {
+                console.error('Error loading coupons:', error);
+                coupons = [
+                    { code: 'WELCOME10', type: 'percentage', value: 10, minOrder: 200, used: 15, expiry: '2024-12-31', status: 'active' },
+                    { code: 'SAVE50', type: 'fixed', value: 50, minOrder: 500, used: 8, expiry: '2024-11-30', status: 'active' }
+                ];
+                renderCoupons();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function renderCoupons() {
+            const tbody = document.getElementById('couponsTable');
+
+            tbody.innerHTML = coupons.map(coupon => `
+                <tr>
+                    <td class="px-5 py-4 font-medium text-gray-800">${coupon.code || ''}</td>
+                    <td class="px-5 py-4 text-gray-600">${coupon.type === 'percentage' ? 'Percentage' : 'Fixed'}</td>
+                    <td class="px-5 py-4 font-medium text-gray-800">${coupon.type === 'percentage' ? coupon.value + '%' : formatCurrency(coupon.value)}</td>
+                    <td class="px-5 py-4 text-gray-600">${formatCurrency(coupon.minOrder)}</td>
+                    <td class="px-5 py-4 text-gray-600">${coupon.used || 0}</td>
+                    <td class="px-5 py-4 text-gray-600">${formatDate(coupon.expiry)}</td>
+                    <td class="px-5 py-4">
+                        <span class="badge ${coupon.status === 'active' ? 'badge-success' : 'badge-neutral'}">${coupon.status || 'inactive'}</span>
+                    </td>
+                    <td class="px-5 py-4 text-right">
+                        <button class="text-indigo-600 hover:text-indigo-800 p-1" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="text-red-600 hover:text-red-800 p-1 ml-2" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="8" class="px-5 py-8 text-center text-gray-500">No coupons found</td></tr>';
+        }
+
+        // ========================================
+        // INVENTORY
+        // ========================================
+        async function loadInventory() {
+            showLoading();
+            try {
+                const [alertsRes, productsRes] = await Promise.all([
+                    apiCall('/inventory/alerts'),
+                    apiCall('/products')
+                ]);
+
+                // Render low stock alerts
+                const lowStockProducts = productsRes.data?.filter(p => (p.stock || 0) < 10) || [];
+                renderLowStock(lowStockProducts);
+
+                // Populate product dropdown for stock adjustment
+                const productSelect = document.getElementById('adjustProduct');
+                productSelect.innerHTML = '<option value="">Select Product</option>' +
+                    productsRes.data?.map(p => `<option value="${p.id}">${p.name}</option>`).join('') || '';
+
+            } catch (error) {
+                console.error('Error loading inventory:', error);
+                // Demo data
+                renderLowStock([
+                    { id: 1, name: 'Amul Curd 400g', stock: 8 },
+                    { id: 2, name: 'Parle-G Biscuit', stock: 0 }
+                ]);
+
+                const productSelect = document.getElementById('adjustProduct');
+                productSelect.innerHTML = '<option value="">Select Product</option>' +
+                    '<option value="1">Amul Butter 500g</option>' +
+                    '<option value="2">Amul Milk 1L</option>' +
+                    '<option value="3">Amul Curd 400g</option>';
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function renderLowStock(products) {
+            const container = document.getElementById('lowStockList');
+            container.innerHTML = products.map(p => `
+                <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-exclamation-triangle text-red-600"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800">${p.name || 'Unknown'}</p>
+                            <p class="text-sm text-red-600">Only ${p.stock || 0} left</p>
+                        </div>
+                    </div>
+                    <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium" onclick="document.getElementById('adjustProduct').value='${p.id}'; navigateTo('inventory');">
+                        Restock
+                    </button>
+                </div>
+            `).join('') || '<p class="text-gray-500 text-sm">No low stock items</p>';
+        }
+
+        // ========================================
+        // REPORTS
+        // ========================================
+        async function loadReports() {
+            showLoading();
+            try {
+                const [salesRes, usersRes] = await Promise.all([
+                    apiCall('/reports/sales'),
+                    apiCall('/reports/users')
+                ]);
+
+                // Render charts
+                renderSalesReportChart(salesRes.data || []);
+                renderUserInsights(usersRes.data || {});
+
+            } catch (error) {
+                console.error('Error loading reports:', error);
+                // Demo data
+                renderSalesReportChart([
+                    { date: 'Mon', total: 12500 },
+                    { date: 'Tue', total: 15800 },
+                    { date: 'Wed', total: 11200 },
+                    { date: 'Thu', total: 18900 },
+                    { date: 'Fri', total: 21000 },
+                    { date: 'Sat', total: 17500 },
+                    { date: 'Sun', total: 14200 }
+                ]);
+                renderUserInsights({
+                    totalUsers: 150,
+                    newUsers: 25,
+                    returningUsers: 125,
+                    avgOrderValue: 450
+                });
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function renderSalesReportChart(data) {
+            const ctx = document.getElementById('salesReportChart')?.getContext('2d');
+            if (!ctx) return;
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(d => d.date),
+                    datasets: [{
+                        label: 'Sales',
+                        data: data.map(d => d.total),
+                        backgroundColor: '#4F46E5',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#F3F4F6' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function renderUserInsights(data) {
+            const container = document.getElementById('userInsights');
+            container.innerHTML = `
+                <div class="flex items-center justify-between p-4 bg-indigo-50 rounded-lg">
+                    <div>
+                        <p class="text-sm text-gray-600">Total Users</p>
+                        <p class="text-2xl font-bold text-gray-800">${data.totalUsers || 0}</p>
+                    </div>
+                    <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-users text-indigo-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+                    <div>
+                        <p class="text-sm text-gray-600">New Users (This Month)</p>
+                        <p class="text-2xl font-bold text-gray-800">${data.newUsers || 0}</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-user-plus text-green-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between p-4 bg-yellow-50 rounded-lg">
+                    <div>
+                        <p class="text-sm text-gray-600">Avg Order Value</p>
+                        <p class="text-2xl font-bold text-gray-800">₹${data.avgOrderValue || 0}</p>
+                    </div>
+                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-rupee-sign text-yellow-600 text-xl"></i>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ========================================
+        // SETTINGS
+        // ========================================
+        async function loadSettings() {
+            showLoading();
+            try {
+                const res = await apiCall('/settings');
+                settings = res.data || {};
+                renderSettings();
+            } catch (error) {
+                console.error('Error loading settings:', error);
+                settings = {
+                    storeName: 'Abhishek Dairy & General Store',
+                    storeEmail: 'contact@abhishekdairy.com',
+                    storePhone: '+91 9876543210',
+                    taxRate: 0,
+                    shippingCharge: 50,
+                    freeShippingAbove: 500
+                };
+                renderSettings();
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function renderSettings() {
+            document.getElementById('storeName').value = settings.storeName || '';
+            document.getElementById('storeEmail').value = settings.storeEmail || '';
+            document.getElementById('storePhone').value = settings.storePhone || '';
+            document.getElementById('taxRate').value = settings.taxRate || 0;
+            document.getElementById('shippingCharge').value = settings.shippingCharge || 0;
+            document.getElementById('freeShippingAbove').value = settings.freeShippingAbove || 0;
+        }
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
+        function init() {
+            // No authentication required - proceed directly
+
+            initSidebar();
+
+            // Load initial dashboard
+            loadDashboard();
+
+            // Logout handlers
+            document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
+            document.getElementById('dropdownLogout')?.addEventListener('click', handleLogout);
+
+            // Settings form
+            document.getElementById('settingsForm')?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await saveSettings();
+            });
+
+            // Stock adjustment form
+            document.getElementById('stockAdjustmentForm')?.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await adjustStock();
+            });
+
+            // Search and filter handlers
+            document.getElementById('productSearch')?.addEventListener('input', renderProducts);
+            document.getElementById('productCategoryFilter')?.addEventListener('change', renderProducts);
+            document.getElementById('productStatusFilter')?.addEventListener('change', renderProducts);
+
+            // Modal close handlers
+            document.getElementById('closeModal')?.addEventListener('click', closeModal);
+            document.querySelector('.modal-backdrop')?.addEventListener('click', closeModal);
+
+            // Chart period change
+            document.getElementById('chartPeriod')?.addEventListener('change', async (e) => {
+                try {
+                    const res = await apiCall(`/dashboard/charts?period=${e.target.value}`);
+                    renderSalesChart(res.data || []);
+                } catch (error) {
+                    console.error('Error changing chart period:', error);
+                }
+            });
+
+            // Load admin info
+            const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
+            if (adminUser.name) {
+                document.getElementById('adminName').textContent = adminUser.name;
+                document.getElementById('adminInitials').textContent = adminUser.name.charAt(0).toUpperCase();
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                await apiCall('/auth/logout', { method: 'POST' });
+            } catch (error) {
+                console.log('Logout API error (ignoring):', error);
+            } finally {
+                localStorage.removeItem('adminAccessToken');
+                localStorage.removeItem('adminRefreshToken');
+                localStorage.removeItem('adminUser');
+                window.location.href = '/admin';
+            }
+        }
+
+        async function saveSettings() {
+            try {
+                const settingsData = {
+                    storeName: document.getElementById('storeName').value,
+                    storeEmail: document.getElementById('storeEmail').value,
+                    storePhone: document.getElementById('storePhone').value,
+                    taxRate: parseFloat(document.getElementById('taxRate').value) || 0,
+                    shippingCharge: parseFloat(document.getElementById('shippingCharge').value) || 0,
+                    freeShippingAbove: parseFloat(document.getElementById('freeShippingAbove').value) || 0
+                };
+
+                await apiCall('/settings', {
+                    method: 'PUT',
+                    body: JSON.stringify(settingsData)
+                });
+
+                showToast('Settings saved successfully!');
+            } catch (error) {
+                console.error('Error saving settings:', error);
+                showToast('Failed to save settings', 'error');
+            }
+        }
+
+        async function adjustStock() {
+            const productId = document.getElementById('adjustProduct').value;
+            const adjustType = document.getElementById('adjustType').value;
+            const quantity = parseInt(document.getElementById('adjustQuantity').value) || 0;
+            const reason = document.getElementById('adjustReason').value;
+
+            if (!productId || !quantity) {
+                showToast('Please fill all fields', 'error');
+                return;
+            }
+
+            try {
+                await apiCall('/inventory/adjust', {
+                    method: 'POST',
+                    body: JSON.stringify({ productId, adjustType, quantity, reason })
+                });
+
+                showToast('Stock updated successfully!');
+                document.getElementById('stockAdjustmentForm').reset();
+                loadInventory();
+            } catch (error) {
+                console.error('Error adjusting stock:', error);
+                showToast('Failed to update stock', 'error');
+            }
+        }
+
+        // Start the app
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

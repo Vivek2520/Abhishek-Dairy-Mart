@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Abhishek Dairy & General Store - Your Neighborhood Kirana Store. Fresh dairy products, groceries, snacks, beverages, and daily essentials delivered to your home in Waidhan, Singrauli.">
+    <meta name="keywords"
+        content="dairy, grocery, snacks, beverages, home delivery, Waidhan, Singrauli, Amul, Haldiram">
+    <meta name="author" content="Abhishek Dairy & General Store">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Abhishek Dairy & General Store - Your Neighborhood Kirana">
+    <meta property="og:description"
+        content="Fresh dairy products, groceries, snacks, and daily essentials with home delivery in Waidhan, Singrauli.">
+    <meta property="og:image" content="/Website.jpeg">
+
+    <title>Abhishek Dairy & General Store - Your Neighborhood Kirana</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS (configured for purge to reduce size) -->
+    <script>
+        window.tailwind = window.tailwind || {};
+        window.tailwind.config = {
+            purge: ['./**/*.html', './public/js/**/*.js'],
+            darkMode: false,
+            theme: {
+                extend: {}
+            },
+            variants: {
+                extend: {}
+            },
+            plugins: [
+                function ({ addUtilities }) {
+                    addUtilities({
+                        '.line-clamp-1': { overflow: 'hidden', display: '-webkit-box', '-webkit-line-clamp': '1', '-webkit-box-orient': 'vertical' },
+                        '.line-clamp-2': { overflow: 'hidden', display: '-webkit-box', '-webkit-line-clamp': '2', '-webkit-box-orient': 'vertical' }
+                    });
+                }
+            ]
+        };
+    </script>
+    <script src="https://cdn.tailwindcss.com" defer></script>
+
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fefefe;
+            color: #333;
+            overflow-x: hidden;
+            font-size: 16px;
+            line-height: 1.5;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* ensure images scale on mobile to avoid overflow */
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Mobile-first base styles */
+        a,
+        button {
+            min-height: 44px;
+            min-width: 44px;
+            touch-action: manipulation;
+        }
+
+        /* Prevent text selection on buttons for better mobile UX */
+        button,
+        a,
+        .filter-btn {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        /* Animations */
+        .hero-gradient {
+            background: linear-gradient(135deg, #4ade80 0%, #3b82f6 50%, #8b5cf6 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-icon {
+            transition: transform 0.5s ease;
+        }
+
+        .category-icon:hover {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .pulse-ring {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+            }
+
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+            }
+
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            }
+        }
+
+        .sticky-nav {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .floating-whatsapp {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px 16px 0 0;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Mobile modal fullscreen */
+        @media (max-width: 480px) {
+            .modal.active {
+                align-items: flex-end;
+            }
+
+            .modal-content {
+                border-radius: 16px 16px 0 0;
+                width: 100%;
+                max-height: 95vh;
+            }
+        }
+
+        /* Enhanced touch-friendly buttons */
+        .btn-mobile {
+            min-height: 48px;
+            padding: 12px 24px;
+            font-size: 16px;
+        }
+
+        /* Cart quantity buttons - larger for touch */
+        .qty-btn {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* Skeleton Loading Animation */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .skeleton-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        /* Smooth fade animation for products */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Filter button active state */
+        .filter-btn.active {
+            background-color: #2563eb !important;
+            color: white !important;
+        }
+
+        /* Parallax Effect for Hero Section */
+        #home {
+            will-change: transform;
+        }
+
+        /* ==================== MOBILE RESPONSIVE STYLES ==================== */
+
+        /* Extra small devices (phones, less than 480px) */
+        @media (max-width: 480px) {
+
+            /* Header */
+            header .container {
+                padding: 0.75rem;
+            }
+
+            header h1 {
+                font-size: 1rem !important;
+            }
+
+            header p {
+                font-size: 0.7rem !important;
+            }
+
+            header .bg-green-500 {
+                padding: 0.5rem;
+            }
+
+            header .fa-store {
+                font-size: 1rem !important;
+            }
+
+            header .fa-bars,
+            header .fa-shopping-cart {
+                font-size: 1.25rem !important;
+            }
+
+            /* Hero Section */
+            #home {
+                padding: 3rem 0;
+                min-height: 50vh;
+            }
+
+            #home h2 {
+                font-size: 1.75rem !important;
+                line-height: 1.3;
+            }
+
+            #home p {
+                font-size: 1rem !important;
+                line-height: 1.4;
+            }
+
+            #home .gap-4 {
+                gap: 0.75rem;
+            }
+
+            #home a {
+                padding: 0.75rem 1.25rem !important;
+                font-size: 0.875rem !important;
+            }
+
+            /* Products Section */
+            #products {
+                padding: 3rem 0;
+            }
+
+            #products h2 {
+                font-size: 1.5rem !important;
+            }
+
+            #products p {
+                font-size: 0.875rem;
+                padding: 0 0.5rem;
+            }
+
+            #products .container {
+                padding: 0 0.75rem;
+            }
+
+            /* Search Input */
+            #searchProduct {
+                padding: 0.875rem 2.5rem 0.875rem 2.75rem !important;
+                font-size: 0.9rem;
+            }
+
+            #searchProduct::placeholder {
+                font-size: 0.85rem;
+            }
+
+            /* Category Filters - Horizontal scroll on mobile */
+            #categoryFilters {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding: 0.5rem 0.75rem;
+                gap: 0.5rem;
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
+            #categoryFilters::-webkit-scrollbar {
+                display: none;
+            }
+
+            .filter-btn {
+                flex-shrink: 0;
+                padding: 0.5rem 1rem !important;
+                font-size: 0.8rem !important;
+                white-space: nowrap;
+            }
+
+            /* Product Cards */
+            #productsContainer {
+                gap: 0.75rem !important;
+                padding: 0 0.5rem;
+            }
+
+            #productsContainer>div {
+                border-radius: 0.75rem !important;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+                transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+                display: flex;
+                flex-direction: column;
+            }
+
+            #productsContainer>div:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+            }
+
+            #productsContainer .p-6 {
+                padding: 0.875rem !important;
+            }
+
+            #productsContainer h3 {
+                font-size: 0.9rem !important;
+                line-height: 1.3;
+            }
+
+            #productsContainer .text-2xl {
+                font-size: 1.25rem !important;
+            }
+
+            #productsContainer button {
+                padding: 0.5rem 0.75rem !important;
+                font-size: 0.8rem !important;
+            }
+
+            #productsContainer .fa-shopping-cart {
+                margin-right: 0.25rem;
+            }
+
+            #productsContainer .relative {
+                height: 10rem !important;
+            }
+
+            /* Categories Section */
+            #categories {
+                padding: 3rem 0;
+            }
+
+            #categories h2 {
+                font-size: 1.5rem !important;
+            }
+
+            #categories .grid {
+                gap: 0.75rem !important;
+            }
+
+            #categories>.container {
+                padding: 0 0.75rem;
+            }
+
+            #categories .rounded-2xl {
+                padding: 1rem !important;
+            }
+
+            #categories .w-16.h-16 {
+                width: 3rem !important;
+                height: 3rem !important;
+            }
+
+            #categories .text-2xl {
+                font-size: 1.25rem !important;
+            }
+
+            #categories h3 {
+                font-size: 0.85rem !important;
+            }
+
+            #categories p {
+                font-size: 0.7rem !important;
+            }
+
+            /* Contact Section */
+            #contact {
+                padding: 3rem 0;
+            }
+
+            #contact h2 {
+                font-size: 1.5rem !important;
+            }
+
+            #contact>.container {
+                padding: 0 0.75rem;
+            }
+
+            #contact .rounded-2xl {
+                padding: 1.25rem !important;
+            }
+
+            #contact h3 {
+                font-size: 1.25rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            #contact .rounded-xl {
+                padding: 0.875rem !important;
+            }
+
+            #contact .text-xl {
+                font-size: 1rem !important;
+            }
+
+            #contact .space-y-6>div {
+                margin-bottom: 1rem;
+            }
+
+            #contact .bg-blue-500,
+            #contact .bg-green-500,
+            #contact .bg-yellow-500 {
+                padding: 0.5rem !important;
+                margin-right: 0.75rem !important;
+            }
+
+            /* Footer */
+            footer {
+                padding: 2rem 0;
+            }
+
+            footer .container {
+                padding: 0 0.75rem;
+            }
+
+            footer h3 {
+                font-size: 1rem !important;
+            }
+
+            footer p {
+                font-size: 0.75rem !important;
+            }
+
+            footer .space-x-6 {
+                gap: 1.5rem;
+            }
+
+            /* Floating WhatsApp Button */
+            .floating-whatsapp {
+                bottom: 5rem !important;
+                right: 1rem !important;
+            }
+
+            .floating-whatsapp .p-4 {
+                padding: 0.75rem !important;
+            }
+
+            .floating-whatsapp .text-3xl {
+                font-size: 1.75rem !important;
+            }
+
+            /* Back to Top */
+            #backToTop {
+                bottom: 5rem !important;
+                left: 1rem !important;
+            }
+
+            /* Modal - Full screen on mobile */
+            .modal-content {
+                border-radius: 1rem 1rem 0 0 !important;
+                max-height: 92vh !important;
+            }
+
+            .modal-content .p-6 {
+                padding: 1rem !important;
+            }
+
+            .modal-content h2 {
+                font-size: 1.25rem !important;
+            }
+
+            /* Cart Items */
+            #cartItemsList .p-4 {
+                padding: 0.75rem !important;
+                gap: 0.5rem !important;
+            }
+
+            #cartItemsList img {
+                width: 4rem !important;
+                height: 4rem !important;
+            }
+
+            #cartItemsList h4 {
+                font-size: 0.85rem !important;
+            }
+
+            #cartItemsList .text-lg {
+                font-size: 1rem !important;
+            }
+
+            #cartItemsList .qty-btn {
+                width: 2rem !important;
+                height: 2rem !important;
+            }
+
+            /* Form Inputs */
+            input,
+            textarea {
+                font-size: 16px !important;
+            }
+
+            /* Touch-friendly buttons */
+            .btn-mobile {
+                min-height: 48px;
+                padding: 0.75rem 1.5rem;
+            }
+        }
+
+        /* Small devices (tablets, 481px to 768px) */
+        @media (min-width: 481px) and (max-width: 768px) {
+            header h1 {
+                font-size: 1.25rem;
+            }
+
+            #home h2 {
+                font-size: 2.25rem;
+            }
+
+            #productsContainer {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Prevent horizontal scroll completely */
+        @media (max-width: 768px) {
+            * {
+                max-width: 100vw;
+                overflow-x: hidden;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+        }
+
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Image optimization */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Safe area for notched phones */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(0.5rem, env(safe-area-inset-left));
+                padding-right: max(0.5rem, env(safe-area-inset-right));
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 sticky-nav shadow-md" role="banner">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-green-500 p-2 rounded-lg" aria-hidden="true">
+                        <i class="fas fa-store text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Abhishek Dairy & General Store</h1>
+                        <p class="text-sm text-gray-600">Dhotti, Waidhan, Singrauli</p>
+                    </div>
+                </div>
+                <nav class="hidden md:flex space-x-8" role="navigation" aria-label="Main navigation">
+                    <a href="#home" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
+                    <a href="#products" class="text-gray-700 hover:text-blue-600 font-medium">Products</a>
+                    <a href="#categories" class="text-gray-700 hover:text-blue-600 font-medium">Categories</a>
+                    <a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium">Contact</a>
+                </nav>
+                <div class="flex items-center gap-4">
+                    <!-- auth buttons will be injected here by JS -->
+                    <div id="authArea" class="flex items-center gap-2">
+                        <!-- placeholder -->
+                    </div>
+                    <button id="headerCartBtn" class="relative text-gray-700 hover:text-blue-600 transition"
+                        aria-label="Shopping cart">
+                        <i class="fas fa-shopping-cart text-2xl"></i>
+                        <span id="headerCartCount"
+                            class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center hidden"
+                            aria-live="polite">0</span>
+                    </button>
+                    <button class="md:hidden text-gray-700" id="menuToggle" aria-label="Toggle menu"
+                        aria-expanded="false">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="hidden md:hidden bg-white shadow-lg" id="mobileMenu" role="navigation"
+            aria-label="Mobile navigation">
+            <div class="flex flex-col py-4 px-4 space-y-4">
+                <a href="#home" class="text-gray-700 hover:text-blue-600 font-medium py-2">Home</a>
+                <a href="#products" class="text-gray-700 hover:text-blue-600 font-medium py-2">Products</a>
+                <a href="#categories" class="text-gray-700 hover:text-blue-600 font-medium py-2">Categories</a>
+                <a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium py-2">Contact</a>
+            </div>
+            <!-- mobile auth buttons -->
+            <div id="authAreaMobile" class="flex flex-col py-4 px-4 space-y-2">
+                <!-- will be filled by JS -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="py-16 md:py-24 text-white relative" aria-label="Hero section"
+        style="background-image: url('Website.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-4 text-white drop-shadow-lg">FRESH DAIRY & DAILY
+                        ESSENTIALS DELIVERED
+                    </h2>
+                    <p class="text-xl md:text-2xl mb-6 text-white drop-shadow">Your Trusted Neighborhood Kirana Store
+                        Providing
+                        Quality Products with Home Delivery in Waidhan, Singrauli.</p>
+                    <p class="text-lg md:text-xl mb-5 text-white drop-shadow">Save Big on Your Favorite Brands</p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="tel:7879355368"
+                            class="bg-red-600 border border-white text-white font-bold py-3 px-6 rounded-full hover:bg-white hover:text-red-600 transition"
+                            aria-label="Call store">
+                            <i class="fas fa-phone-alt mr-2"></i>Call Now
+                        </a>
+                        <a href="https://maps.app.goo.gl/82n2kAmGKj7sizYS6" target="_blank" rel="noopener noreferrer"
+                            class="bg-red-600 border border-white text-white font-bold py-3 px-6 rounded-full hover:bg-white hover:text-red-600 transition"
+                            aria-label="Get directions to store">
+                            <i class="fas fa-map-marker-alt mr-2"></i>Visit Store
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-16 bg-gray-50" aria-labelledby="products-heading">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 id="products-heading" class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Our Products</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Fresh dairy products, groceries, snacks, beverages, and all
+                    daily essentials. Prices updated in real-time.</p>
+            </div>
+
+            <!-- Search -->
+            <div class="mb-8 flex justify-center">
+                <div class="relative w-full max-w-md">
+                    <label for="searchProduct" class="sr-only">Search products</label>
+                    <input type="text" id="searchProduct" placeholder="Search for products..."
+                        aria-label="Search products"
+                        class="w-full p-4 pl-12 rounded-xl border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fas fa-search absolute left-4 top-5 text-gray-400" aria-hidden="true"></i>
+                    <button id="clearSearch" class="absolute right-4 top-5 text-gray-400 hover:text-gray-600 hidden"
+                        aria-label="Clear search">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category Filters -->
+            <div class="mb-8 flex justify-center" role="group" aria-label="Product categories">
+                <div id="categoryFilters" class="flex justify-center flex-wrap gap-2">
+                    <button class="filter-btn px-4 py-2 rounded-full bg-blue-600 text-white font-medium active"
+                        data-category="all">All Items</button>
+                    <button
+                        class="filter-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 font-medium hover:bg-blue-100"
+                        data-category="dairy">Dairy</button>
+                    <button
+                        class="filter-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 font-medium hover:bg-blue-100"
+                        data-category="grocery">Groceries</button>
+                    <button
+                        class="filter-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 font-medium hover:bg-blue-100"
+                        data-category="beverages">Beverages</button>
+                    <button
+                        class="filter-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 font-medium hover:bg-blue-100"
+                        data-category="snacks">Snacks</button>
+                    <button
+                        class="filter-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 font-medium hover:bg-blue-100"
+                        data-category="ready-to-eat">Ready to Eat</button>
+                    <button
+                        class="filter-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 font-medium hover:bg-blue-100"
+                        data-category="sweets">Sweets</button>
+                    <button
+                        class="filter-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 font-medium hover:bg-blue-100"
+                        data-category="namkeen">Namkeen</button>
+                </div>
+            </div>
+
+            <!-- Loading States -->
+            <div id="initialLoadingSpinner" class="flex justify-center my-12" role="status" aria-live="polite">
+                <div class="loading-spinner h-12 w-12"></div>
+            </div>
+
+            <div id="filterLoadingSpinner" class="hidden flex justify-center my-8" role="status" aria-live="polite">
+                <div class="loading-spinner h-8 w-8"></div>
+            </div>
+
+            <!-- Products Container -->
+            <div id="productsContainer"
+                class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 lg:gap-6"
+                role="region" aria-label="Products list">
+                <!-- Products will be loaded via API -->
+            </div>
+
+            <!-- No Products Found -->
+            <div id="noProducts" class="hidden text-center py-12" role="status" aria-live="polite">
+                <i class="fas fa-search text-5xl text-gray-300 mb-4" aria-hidden="true"></i>
+                <h3 class="text-2xl font-bold text-gray-500">No products found</h3>
+                <p class="text-gray-400">Try searching for a different item</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section id="categories" class="py-16 bg-white" aria-labelledby="categories-heading">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 id="categories-heading" class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Shop by Category
+                </h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Everything you need for your home, neatly organized</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 justify-items-center">
+                <!-- Dairy -->
+                <div class="bg-blue-50 rounded-2xl p-6 text-center card-hover w-full cursor-pointer"
+                    onclick="filterByCategory('dairy')" role="button" tabindex="0" aria-label="Browse Dairy products">
+                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 category-icon"
+                        aria-hidden="true">
+                        <i class="fas fa-cheese text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800">Fresh Dairy</h3>
+                    <p class="text-sm text-gray-600 mt-2">Milk, Curd, Paneer, Ghee</p>
+                </div>
+
+                <!-- Beverages -->
+                <div class="bg-yellow-50 rounded-2xl p-6 text-center card-hover w-full cursor-pointer"
+                    onclick="filterByCategory('beverages')" role="button" tabindex="0" aria-label="Browse Beverages">
+                    <div class="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 category-icon"
+                        aria-hidden="true">
+                        <i class="fas fa-wine-bottle text-yellow-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800">Beverages</h3>
+                    <p class="text-sm text-gray-600 mt-2">Coldrinks, soda, water Bottel</p>
+                </div>
+
+                <!-- Snacks -->
+                <div class="bg-purple-50 rounded-2xl p-6 text-center card-hover w-full cursor-pointer"
+                    onclick="filterByCategory('snacks')" role="button" tabindex="0" aria-label="Browse Snacks">
+                    <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 category-icon"
+                        aria-hidden="true">
+                        <i class="fas fa-cookie text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800">Snacks</h3>
+                    <p class="text-sm text-gray-600 mt-2">Chips, Biscuits, Cookies</p>
+                </div>
+
+                <!-- Sweets -->
+                <div class="bg-green-50 rounded-2xl p-6 text-center card-hover w-full cursor-pointer"
+                    onclick="filterByCategory('sweets')" role="button" tabindex="0" aria-label="Browse Sweets">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 category-icon"
+                        aria-hidden="true">
+                        <i class="fas fa-ice-cream text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800">Sweets</h3>
+                    <p class="text-sm text-gray-600 mt-2">Sweets, Soan Papdi, Gulab Jamun</p>
+                </div>
+
+                <!-- Grocery -->
+                <div class="bg-red-50 rounded-2xl p-6 text-center card-hover w-full cursor-pointer"
+                    onclick="filterByCategory('grocery')" role="button" tabindex="0" aria-label="Browse Grocery">
+                    <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 category-icon"
+                        aria-hidden="true">
+                        <i class="fas fa-utensils text-red-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800">Kitchen Essentials</h3>
+                    <p class="text-sm text-gray-600 mt-2">Spices, Oil, Flour, Rice</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-gray-900 text-white" aria-labelledby="contact-heading">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 id="contact-heading" class="text-3xl md:text-4xl font-bold mb-4">Visit Our Store</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto">We're here to serve you with a smile and quality products</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <div class="bg-gray-800 rounded-2xl p-8 shadow-xl">
+                        <h3 class="text-2xl font-bold mb-6">Store Information</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="bg-blue-500 p-3 rounded-lg mr-4" aria-hidden="true">
+                                    <i class="fas fa-map-marker-alt text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg mb-1">Address</h4>
+                                    <p class="text-gray-300">Abhishek Dairy And General Store, Dhotti, Sai College Road,
+                                        Waidhan, Singrauli, Madhya Pradesh, Pin Code: 486886</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-green-500 p-3 rounded-lg mr-4" aria-hidden="true">
+                                    <i class="fas fa-phone-alt text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg mb-1">Phone Number</h4>
+                                    <p class="text-gray-300 text-xl font-bold">7879355368, 7000755886</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-yellow-500 p-3 rounded-lg mr-4" aria-hidden="true">
+                                    <i class="fas fa-clock text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg mb-1">Opening Hours</h4>
+                                    <p class="text-gray-300">Monday - Sunday: 8:00 AM - 10:00 PM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="bg-gray-800 rounded-2xl p-8 shadow-xl h-full">
+                        <h3 class="text-2xl font-bold mb-6">Quick Contact</h3>
+                        <p class="text-gray-300 mb-6">Have questions or need home delivery? Reach out to us!</p>
+                        <div class="space-y-4">
+                            <a href="tel:7879355368"
+                                class="block bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-xl text-center transition"
+                                aria-label="Call store for enquiries">
+                                <i class="fas fa-phone-alt mr-2"></i>Call Now for Enquiries
+                            </a>
+                            <a href="https://wa.me/917879355368" target="_blank" rel="noopener noreferrer"
+                                class="block bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-xl text-center transition"
+                                aria-label="Order via WhatsApp">
+                                <i class="fab fa-whatsapp mr-2"></i>WhatsApp Order
+                            </a>
+                            <div class="bg-gray-700 rounded-xl p-4 text-center">
+                                <p class="text-gray-300">Home delivery available within 5km radius. Minimum order: ₹299
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 border-t border-gray-700 py-8" role="contentinfo">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="bg-green-500 p-2 rounded-lg" aria-hidden="true">
+                            <i class="fas fa-store text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Abhishek Dairy & General Store</h3>
+                    </div>
+                    <p class="text-gray-400">Serving Waidhan with quality products since January 2025</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="tel:7879355368" class="text-gray-400 hover:text-white" aria-label="Call store">
+                        <i class="fas fa-phone-alt text-xl"></i>
+                    </a>
+                    <a href="https://wa.me/917879355368" target="_blank" rel="noopener noreferrer"
+                        class="text-gray-400 hover:text-white" aria-label="WhatsApp">
+                        <i class="fab fa-whatsapp text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white" aria-label="Location">
+                        <i class="fas fa-map-marker-alt text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2026 Abhishek Dairy & General Store. All rights reserved.</p>
+                <p class="mt-2 text-sm">Designed with ❤️ for our valued customers</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp -->
+    <a href="https://wa.me/917879355368" target="_blank" rel="noopener noreferrer"
+        class="fixed bottom-6 right-6 z-40 floating-whatsapp" aria-label="Order via WhatsApp">
+        <div class="bg-green-500 text-white p-4 rounded-full shadow-2xl pulse-ring">
+            <i class="fab fa-whatsapp text-3xl"></i>
+        </div>
+    </a>
+
+    <!-- Back to Top -->
+    <button id="backToTop" class="fixed bottom-6 left-6 z-40 bg-blue-600 text-white p-3 rounded-full shadow-2xl hidden"
+        aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="cart-modal-title">
+        <div class="modal-content">
+            <div
+                class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-t-2xl flex justify-between items-center sticky top-0 shadow-lg">
+                <div>
+                    <h2 id="cart-modal-title" class="text-2xl font-bold">🛒 Your Cart</h2>
+                    <p class="text-blue-100 text-sm" id="cartItemCount">0 items</p>
+                </div>
+                <button id="closeCart"
+                    class="text-3xl hover:text-blue-200 transition w-10 h-10 flex items-center justify-center"
+                    aria-label="Close cart">&times;</button>
+            </div>
+
+            <div id="cartItemsList" class="p-6 space-y-4" role="list" aria-label="Cart items">
+                <!-- Cart items will be displayed here -->
+            </div>
+
+            <div id="emptyCartMessage" class="p-12 text-center">
+                <i class="fas fa-shopping-cart text-6xl text-gray-300 mb-4" aria-hidden="true"></i>
+                <h3 class="text-2xl font-bold text-gray-500 mb-2">Your cart is empty</h3>
+                <p class="text-gray-400 mb-4">Add products to get started!</p>
+                <button onclick="document.getElementById('cartModal').classList.remove('active')"
+                    class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                    Continue Shopping
+                </button>
+            </div>
+
+            <!-- Cart Summary Section -->
+            <div id="cartSummarySection" class="hidden border-t border-gray-300 bg-gray-50 p-6 space-y-4">
+                <div class="bg-white rounded-lg p-4 space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Subtotal:</span>
+                        <span class="font-semibold text-gray-800" id="subtotal">₹0</span>
+                    </div>
+                    <!-- coupon row (hidden until applied) -->
+                    <div class="flex justify-between items-center hidden" id="discountRow">
+                        <span class="text-gray-600">Discount:</span>
+                        <span class="font-semibold text-green-600" id="discountAmount">-₹0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Delivery Charge:</span>
+                        <span class="font-semibold text-gray-800">₹50</span>
+                    </div>
+                    <div class="border-t pt-2 flex justify-between items-center">
+                        <span class="font-bold text-lg">Total Amount:</span>
+                        <span class="font-bold text-2xl text-green-600" id="totalAmount">₹0</span>
+                    </div>
+                </div>
+
+                <!-- Coupon Code -->
+                <div class="bg-white rounded-lg p-4 space-y-3">
+                    <h3 class="font-bold text-gray-800 mb-2">🎟️ Have a coupon?</h3>
+                    <div class="flex gap-2">
+                        <input type="text" id="couponCode" placeholder="Enter coupon code"
+                            class="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <button id="applyCouponBtn"
+                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium">
+                            Apply
+                        </button>
+                    </div>
+                    <p class="text-xs text-red-500 hidden" id="couponMessage"></p>
+                </div>
+
+                <!-- Customer Details Form -->
+                <div class="bg-white rounded-lg p-4 space-y-3">
+                    <h3 class="font-bold text-gray-800 mb-3">📋 Delivery Details</h3>
+                    <label for="customerName" class="sr-only">Your Full Name</label>
+                    <input type="text" id="customerName" placeholder="👤 Your Full Name"
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <label for="customerPhone" class="sr-only">Phone Number</label>
+                    <input type="tel" id="customerPhone" placeholder="📱 Phone Number"
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <label for="deliveryAddress" class="sr-only">Complete Delivery Address</label>
+                    <textarea id="deliveryAddress" placeholder="📍 Complete Delivery Address (with Landmark)" rows="3"
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"></textarea>
+                </div>
+
+                <!-- Order Button -->
+                <button id="orderWhatsappBtn"
+                    class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition flex items-center justify-center gap-3 shadow-lg hover:shadow-xl">
+                    <i class="fab fa-whatsapp text-2xl"></i>
+                    <span>Place Order on WhatsApp</span>
+                </button>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    We will confirm your order within 5 minutes via WhatsApp
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN / REGISTER / PROFILE MODALS -->
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="login-modal-title">
+        <div class="modal-content p-6">
+            <h2 id="login-modal-title" class="text-2xl font-bold mb-4">Login</h2>
+            <form id="loginForm" class="space-y-4">
+                <input type="text" id="loginPhone" placeholder="Phone" class="w-full p-3 border rounded" required>
+                <input type="password" id="loginPassword" placeholder="Password" class="w-full p-3 border rounded"
+                    required>
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center"><input type="checkbox" id="rememberMe" class="mr-2">Remember
+                        me</label>
+                    <button type="button" id="showForgot" class="text-blue-600 hover:underline text-sm">Forgot?</button>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded">Login</button>
+            </form>
+            <p class="mt-4 text-center">Don't have an account? <button id="showRegister"
+                    class="text-blue-600 hover:underline">Register</button></p>
+            <button class="absolute top-4 right-4 text-2xl" id="closeLogin">&times;</button>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="register-modal-title">
+        <div class="modal-content p-6">
+            <h2 id="register-modal-title" class="text-2xl font-bold mb-4">Register</h2>
+            <form id="registerForm" class="space-y-4">
+                <input type="text" id="regName" placeholder="Full Name" class="w-full p-3 border rounded" required>
+                <input type="text" id="regPhone" placeholder="Phone" class="w-full p-3 border rounded" required>
+                <input type="email" id="regEmail" placeholder="Email (optional)" class="w-full p-3 border rounded">
+                <input type="password" id="regPassword" placeholder="Password" class="w-full p-3 border rounded"
+                    required>
+                <button type="submit" class="w-full bg-green-600 text-white p-3 rounded">Register</button>
+            </form>
+            <p class="mt-4 text-center">Already have an account? <button id="showLoginFromRegister"
+                    class="text-blue-600 hover:underline">Login</button></p>
+            <button class="absolute top-4 right-4 text-2xl" id="closeRegister">&times;</button>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="forgot-modal-title">
+        <div class="modal-content p-6">
+            <h2 id="forgot-modal-title" class="text-2xl font-bold mb-4">Forgot Password</h2>
+            <form id="forgotForm" class="space-y-4">
+                <input type="email" id="forgotEmail" placeholder="Email" class="w-full p-3 border rounded" required>
+                <button type="submit" class="w-full bg-yellow-600 text-white p-3 rounded">Send Reset Link</button>
+            </form>
+            <button class="absolute top-4 right-4 text-2xl" id="closeForgot">&times;</button>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div id="resetModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="reset-modal-title">
+        <div class="modal-content p-6">
+            <h2 id="reset-modal-title" class="text-2xl font-bold mb-4">Reset Password</h2>
+            <form id="resetForm" class="space-y-4">
+                <input type="text" id="resetTokenInput" placeholder="Reset Token" class="w-full p-3 border rounded"
+                    required>
+                <input type="password" id="resetNewPassword" placeholder="New Password"
+                    class="w-full p-3 border rounded" required>
+                <input type="password" id="resetConfirmPassword" placeholder="Confirm Password"
+                    class="w-full p-3 border rounded" required>
+                <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded">Reset</button>
+            </form>
+            <button class="absolute top-4 right-4 text-2xl" id="closeReset">&times;</button>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="profile-modal-title">
+        <div class="modal-content p-6">
+            <h2 id="profile-modal-title" class="text-2xl font-bold mb-4">My Profile</h2>
+            <form id="profileForm" class="space-y-4">
+                <input type="text" id="profileName" placeholder="Full Name" class="w-full p-3 border rounded" required>
+                <input type="email" id="profileEmail" placeholder="Email" class="w-full p-3 border rounded">
+                <button type="submit" class="w-full bg-green-600 text-white p-3 rounded">Update</button>
+            </form>
+            <hr class="my-4">
+            <div id="profileOrders">
+                <h3 class="text-lg font-bold mb-2">Your Orders</h3>
+                <ul class="space-y-2 text-sm text-gray-700" id="ordersList">
+                    <!-- orders populated by JS -->
+                </ul>
+            </div>
+            <button class="absolute top-4 right-4 text-2xl" id="closeProfile">&times;</button>
+        </div>
+    </div>
+
+    <!-- External JavaScript Files -->
+    <!-- module-based scripts with defer for non-blocking load -->
+    <script type="module" defer src="/public/js/appState.js"></script>
+    <script type="module" defer src="/public/js/services/api.js"></script>
+    <script type="module" defer src="/public/js/services/cart.js"></script>
+    <script type="module" defer src="/public/js/components/productCard.js"></script>
+    <script type="module" defer src="/public/js/authHelpers.js"></script>
+    <script type="module" defer src="/public/js/uiManager.js"></script>
+    <script type="module" defer src="/public/js/init.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Dashboard | Abhishek Dairy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body data-page="profile" class="min-h-screen bg-slate-100">
+    <header class="bg-white shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+            <h1 class="text-xl font-bold text-slate-800">My Profile Dashboard</h1>
+            <div class="flex items-center gap-3">
+                <a href="/" class="text-blue-600 hover:underline">Back to Store</a>
+                <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 rounded-lg">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-6 space-y-6">
+        <div id="formMessage" class="hidden"></div>
+
+        <section class="bg-white rounded-xl shadow-sm p-5">
+            <h2 class="text-lg font-semibold text-slate-800 mb-4">Account Details</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                <div><span class="font-semibold text-slate-700">Name:</span> <span id="profileName">-</span></div>
+                <div><span class="font-semibold text-slate-700">Email:</span> <span id="profileEmail">-</span></div>
+                <div><span class="font-semibold text-slate-700">Username:</span> <span id="profileUsername">-</span></div>
+                <div><span class="font-semibold text-slate-700">Phone:</span> <span id="profilePhone">-</span></div>
+                <div><span class="font-semibold text-slate-700">Email Verification:</span> <span id="profileVerified">-</span></div>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-xl shadow-sm p-5">
+            <h2 class="text-lg font-semibold text-slate-800 mb-4">Recent Orders</h2>
+            <div id="profileOrders" class="space-y-3"></div>
+        </section>
+    </main>
+
+    <script type="module" src="/public/js/authPages.js"></script>
+</body>
+</html>

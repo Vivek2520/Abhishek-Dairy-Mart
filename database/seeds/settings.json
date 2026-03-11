@@ -1,0 +1,22 @@
+{
+  "id": "SET001",
+  "storeName": "Abhishek Dairy & General Store",
+  "storeEmail": "store@abhishekdairy.com",
+  "storePhone": "+919876543210",
+  "storeAddress": "123 Main Street, Mumbai, Maharashtra, India",
+  "currency": "INR",
+  "taxRate": 18,
+  "deliveryCharge": 50,
+  "minOrderAmount": 299,
+  "paymentMethods": ["cod", "online"],
+  "notifications": {
+    "emailOnNewOrder": true,
+    "emailOnLowStock": true,
+    "emailOnNewUser": false,
+    "smsOnOrderStatus": false,
+    "stockAlertThreshold": 10
+  },
+  "twoFactorAuth": false,
+  "sessionTimeout": 3600,
+  "updatedAt": "2024-02-01T10:00:00Z"
+}

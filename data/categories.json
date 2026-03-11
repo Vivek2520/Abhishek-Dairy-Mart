@@ -1,0 +1,57 @@
+[
+  {
+    "id": "CAT001",
+    "name": "Dairy",
+    "description": "Milk, Butter, Ghee, Yogurt",
+    "image": null,
+    "parentId": null,
+    "status": "active",
+    "displayOrder": 1,
+    "createdAt": "2024-02-01T10:00:00Z",
+    "updatedAt": "2024-02-01T10:00:00Z"
+  },
+  {
+    "id": "CAT002",
+    "name": "Vegetables",
+    "description": "Fresh vegetables",
+    "image": null,
+    "parentId": null,
+    "status": "active",
+    "displayOrder": 2,
+    "createdAt": "2024-02-01T10:00:00Z",
+    "updatedAt": "2024-02-01T10:00:00Z"
+  },
+  {
+    "id": "CAT003",
+    "name": "Fruits",
+    "description": "Fresh fruits",
+    "image": null,
+    "parentId": null,
+    "status": "active",
+    "displayOrder": 3,
+    "createdAt": "2024-02-01T10:00:00Z",
+    "updatedAt": "2024-02-01T10:00:00Z"
+  },
+  {
+    "id": "CAT004",
+    "name": "Snacks",
+    "description": "Snacks and packaged foods",
+    "image": null,
+    "parentId": null,
+    "status": "active",
+    "displayOrder": 4,
+    "createdAt": "2024-02-01T10:00:00Z",
+    "updatedAt": "2024-02-01T10:00:00Z"
+  },
+  {
+    "id": "CAT005",
+    "name": "Spices",
+    "description": "Indian spices and condiments",
+    "image": null,
+    "parentId": null,
+    "status": "active",
+    "displayOrder": 5,
+    "createdAt": "2024-02-01T10:00:00Z",
+    "updatedAt": "2024-02-01T10:00:00Z"
+  }
+]
