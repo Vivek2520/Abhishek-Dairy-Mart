@@ -1,77 +1,19 @@
-# Backend-Database Connection Fix - COMPLETED ✅
+# Abhishek Dairy Mart Netlify Deployment TODO
 
-## 🎉 SUCCESS SUMMARY
+## Status: ✅ Step 2 Complete - netlify.toml updated
 
-**Backend successfully configured for MySQL connection!**
+### Step 1: [✅] Create deployment plan (completed)
 
-### Completed Steps:
+### Step 2: [✅] Update netlify.toml publish directory ✅ `frontend/public`
 
-✅ **Step 1:** TODO.md created  
-✅ **Step 2:** `backend/.env` created (abhishek_dairy_mart)  
-✅ **Step 3:** MongoDB files removed:
+### Step 3: [ ] Stage and commit all changes
 
-- `backend/src/config/database.js` → DELETED
-- `backend/src/services/userServiceMongo.js` → DELETED
-- `backend/src/models/User.js` → DELETED (orphan cleaned)
-  ✅ **Step 4:** Dependencies verified (mysql2, dotenv, etc.)
-  ✅ **Step 5:** Connection ready for testing
+### Step 4: [ ] Create GitHub repo 'abhishek-dairy-mart' & push
 
-## 🚀 DEPLOYMENT & TESTING
+### Step 5: [ ] Connect to Netlify (publish: frontend/public)
 
-### Prerequisites (USER ACTION REQUIRED):
+### Step 6: [ ] Verify deployment (homepage, robots.txt, etc.)
 
-```
-1. [ ] Start XAMPP → MySQL service (green light)
-2. [ ] phpMyAdmin → Create database `abhishek_dairy_mart`
-3. [ ] Port 5000 free
-```
+### Step 7: [ ] Final output with URLs
 
-### Start Server:
-
-```powershell
-cd backend
-npm run dev
-```
-
-**Expected Output:**
-
-```
-[Server] Testing database connection...
-[Server] ✅ Database connection successful
-[DB] ✓ Users table ready
-[DB] ✓ Products table ready
-...
-🚀 Abhishek Dairy Server Started
-http://localhost:5000
-```
-
-### Verify Connection:
-
-```powershell
-curl http://localhost:5000/api/health
-```
-
-**Expected:** `{"status":"ok","database":"connected"}`
-
-### Test APIs:
-
-```powershell
-# Register user
-curl -X POST http://localhost:5000/api/auth/register -H "Content-Type: application/json" -d "{\"name\":\"Test\",\"email\":\"test@example.com\",\"password\":\"password123\"}"
-
-# Admin login (default)
-curl -X POST http://localhost:5000/api/admin/auth/login -H "Content-Type: application/json" -d "{\"email\":\"admin@abhishek.com\",\"password\":\"admin123\"}"
-```
-
-## 📋 Final Checklist
-
-- [ ] MySQL running & database created
-- [ ] Server starts without DB errors
-- [ ] /api/health returns \"database\":\"connected\"
-- [ ] Tables auto-created (phpMyAdmin)
-- [ ] User registration works
-- [ ] Admin login works (admin@abhishek.com / admin123)
-
-## 🔍 Connection Status: READY ✅
-
-**Backend-database connection audit COMPLETE. Server will connect successfully!**
+**Next:** `git add . && git commit` → **Need your GitHub username** for repo creation/push.

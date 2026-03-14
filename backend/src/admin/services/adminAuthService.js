@@ -12,9 +12,11 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'change-this-secret-key-in-production-12345';
-const JWT_EXPIRE = process.env.JWT_EXPIRE || '1h';
-const JWT_REFRESH_EXPIRE = process.env.JWT_REFRESH_EXPIRE || '7d';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET || JWT_SECRET.length < 32) {
+  throw new Error('JWT_SECRET must be defined in .env file (minimum 32 characters required)');
+}
+const JWT_EX
 
 /**
  * Generate JWT access token (SECURE implementation)

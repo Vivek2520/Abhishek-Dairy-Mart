@@ -8,6 +8,9 @@
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
+const compression = require('compression');
+const xssClean = require('xss-clean');
+const mongoSanitize = require('express-mongo-sanitize');
 const { config } = require('../config');
 
 /**
@@ -16,6 +19,7 @@ const { config } = require('../config');
  * CRITICAL SECURITY ENHANCEMENT
  */
 const helmetMiddleware = helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
@@ -54,6 +58,7 @@ const rateLimiter = rateLimit({
     },
     standardHeaders: true,
     legacyHeaders: false,
+    skip: (req) => req.path === '/api/health' || req.path === '/health',
     handler: (req, res, next, options) => {
         console.warn(`[RATE LIMIT] IP: ${req.ip} - Too many requests`);
         res.status(options.statusCode).json(options.message);
@@ -89,6 +94,13 @@ const orderLimiter = rateLimit({
     }
 });
 
+const compressionMiddleware = compression();
+const xssMiddleware = xssClean();
+const mongoSanitizeMiddleware = mongoSanitize();
+
+const apiLimiter = rateLimiter;
+const loginLimiter = authLimiter;
+
 /**
  * CORS middleware configuration
  * Enables Cross-Origin Resource Sharing with strict security
@@ -96,7 +108,7 @@ const orderLimiter = rateLimit({
  */
 const corsMiddleware = cors({
     origin: function(origin, callback) {
-        const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000,http://localhost:5000').split(',')
+        const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://localhost:5000').split(',')
             .map(url => url.trim());
         
         // Allow requests with no origin (like mobile apps or curl requests)
@@ -136,6 +148,11 @@ const pppMiddleware = (req, res, next) => {
 
 module.exports = {
     helmetMiddleware,
+    compressionMiddleware,
+    xssMiddleware,
+    mongoSanitizeMiddleware,
+    apiLimiter,
+    loginLimiter,
     rateLimiter,
     authLimiter,
     orderLimiter,

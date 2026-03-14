@@ -219,15 +219,25 @@ const initializeDatabase = async () => {
         `);
         console.log('[DB] ✓ Settings table ready');
 
-        // Insert default admin if not exists
+        // Insert default admin if not exists (only first time)
         const bcrypt = require('bcryptjs');
-        const defaultPassword = await bcrypt.hash('admin123', 10);
-        
-        await db.execute(`
-            INSERT IGNORE INTO users (name, email, phone, password, role, is_email_verified)
-            VALUES (?, ?, ?, ?, ?, ?)
-        `, ['Admin', 'admin@abhishek.com', '9876543210', defaultPassword, 'admin', true]);
-        console.log('[DB] ✓ Default admin user created');
+        const adminPassword = process.env.ADMIN_DEFAULT_PASSWORD || 'Vivek@2029';
+        const adminEmail = process.env.ADMIN_EMAIL || 'Shahvivekkumar25@gmail.com';
+        if (!adminPassword) {
+          console.log('[DB] ⚠️ ADMIN_DEFAULT_PASSWORD not set in .env - skipping default admin creation');
+        } else {
+          const [existingAdmins] = await db.execute('SELECT id FROM users WHERE role = "admin" LIMIT 1');
+          if (existingAdmins.length === 0) {
+            const defaultPassword = await bcrypt.hash(adminPassword, 12);
+            await db.execute(`
+              INSERT INTO users (name, email, phone, password, role, is_email_verified)
+              VALUES (?, ?, ?, ?, ?, ?)
+            `, ['Admin', adminEmail, '9876543210', defaultPassword, 'admin', true]);
+            console.log('[DB] ✓ Default admin created with email: ' + adminEmail + ' (change password immediately!)');
+          } else {
+            console.log('[DB] ✓ Admin already exists - skipped creation');
+          }
+        }
 
         // Insert default categories if not exists
         const categoriesExist = await db.execute('SELECT COUNT(*) as count FROM categories');

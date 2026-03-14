@@ -6,15 +6,30 @@
  * @author Abhishek Dairy
  */
 
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
+const express = require('express');\nconst { corsMiddleware, helmetMiddleware, compressionMiddleware, xssMiddleware, mongoSanitizeMiddleware, apiLimiter, loginLimiter } = require('./middleware/security');\nconst httpsRedirect = require('./middleware/httpsRedirect');\nconst path = require('path');
 
 // Load environment variables
 require('dotenv').config();
 
+// Validate critical environment variables
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+  console.error('❌ ERROR: JWT_SECRET must be set in backend/.env (min 32 chars)');
+  process.exit(1);
+}
+if (!process.env.DB_HOST || !process.env.DB_NAME) {
+  console.error('❌ ERROR: DB_HOST and DB_NAME required in backend/.env');
+  process.exit(1);
+}
+console.log('✅ Environment validated successfully');
+
+if (!process.env.CORS_ORIGINS) {
+  console.warn('⚠️  WARNING: CORS_ORIGINS not set. Using fallback origins only (dev mode)');
+}
+
 // Import database config
 const db = require('./config/db');
+const testDatabaseConnection = require('./config/db').testDatabaseConnection;
+const checkDatabaseHealth = require('./config/db').checkDatabaseHealth;
 const { initializeDatabase } = require('./config/initDb');
 
 // Import routes
@@ -30,16 +45,19 @@ const PORT = process.env.PORT || 5000;
 // MIDDLEWARE
 // ============================================
 
-// CORS - Allow all origins for development
-app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true
-}));
+// Secure CORS middleware (environment-validated)
+app.use(corsMiddleware);
 
-// Body parsers
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// HTTPS Enforcement for production (reverse proxy aware)\napp.set('trust proxy', 1);\napp.use(httpsRedirect);\n\n// Production security middlewares\napp.use(helmetMiddleware);\napp.use(compressionMiddleware);\napp.use(xssMiddleware);\napp.use(mongoSanitizeMiddleware);
+
+// Body parsers (100kb limit for security)
+app.use(express.json({ limit: '100kb' }));
+app.use(express.urlencoded({ extended: true, limit: '100kb' }));
+ 
+// Rate limiting
+app.use('/api', apiLimiter);
+app.use('/api/auth/login', loginLimiter);
+app.use('/api/admin/auth/login', loginLimiter);
 
 // ============================================
 // STATIC FILE SERVING
@@ -101,21 +119,20 @@ app.get('/admin/dashboard', (req, res) => {
 // ============================================
 
 app.get('/api/health', async (req, res) => {
-    try {
-        // Test database connection
-        await db.execute('SELECT 1');
-        res.json({ 
-            status: 'ok', 
-            message: 'Server is running',
+    const isDbHealthy = await checkDatabaseHealth();
+    
+    if (isDbHealthy) {
+        res.status(200).json({ 
+            status: 'OK', 
+            server: 'running',
             database: 'connected',
             timestamp: new Date().toISOString()
         });
-    } catch (error) {
-        res.json({ 
-            status: 'error', 
-            message: 'Server running but DB not connected',
+    } else {
+        res.status(500).json({ 
+            status: 'ERROR',
+            server: 'running', 
             database: 'disconnected',
-            error: error.message,
             timestamp: new Date().toISOString()
         });
     }
@@ -129,7 +146,7 @@ app.use((req, res) => {
     res.status(404).json({ 
         success: false, 
         message: 'Endpoint not found',
-        path: req.path
+        path: req.path 
     });
 });
 
@@ -151,10 +168,10 @@ app.use((err, req, res, next) => {
 
 const startServer = async () => {
     try {
-        // Test database connection first
+        console.log('[Server] Environment: ' + (process.env.NODE_ENV || 'development'));
         console.log('[Server] Testing database connection...');
-        await db.execute('SELECT 1');
-        console.log('[Server] ✅ Database connection successful');
+        
+        await testDatabaseConnection();
         
         // Initialize database (create tables if needed)
         console.log('[Server] Initializing database tables...');

@@ -15,7 +15,7 @@ const db = require('../config/db');
  * @returns {string} JWT token
  */
 const generateToken = (payload, expiresIn = '24h') => {
-    const secret = process.env.JWT_SECRET || 'your-super-secret-key-change-in-production';
+const secret = process.env.JWT_SECRET;
     return jwt.sign(payload, secret, { expiresIn });
 };
 
@@ -25,7 +25,7 @@ const generateToken = (payload, expiresIn = '24h') => {
  * @returns {Object} Decoded token payload
  */
 const verifyToken = (token) => {
-    const secret = process.env.JWT_SECRET || 'your-super-secret-key-change-in-production';
+const secret = process.env.JWT_SECRET;
     return jwt.verify(token, secret);
 };
 
@@ -62,6 +62,7 @@ const authenticateUser = async (req, res, next) => {
             }
             
             req.user = users[0];
+            req.user.userId = req.user.id; // Fix for controller compatibility
             next();
         } catch (jwtError) {
             return res.status(401).json({
@@ -111,6 +112,7 @@ const authenticateAdmin = async (req, res, next) => {
             }
             
             req.admin = users[0];
+            req.admin.userId = req.admin.id; // Fix for controller compatibility
             next();
         } catch (jwtError) {
             return res.status(401).json({
@@ -150,6 +152,7 @@ const optionalAuth = async (req, res, next) => {
             
             if (users.length > 0 && users[0].is_active) {
                 req.user = users[0];
+                req.user.userId = req.user.id; // Fix for controller compatibility
             }
         } catch (jwtError) {
             // Token invalid, but we continue without user

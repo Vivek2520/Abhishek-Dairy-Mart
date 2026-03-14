@@ -28,11 +28,18 @@ const { asyncHandler } = require('../utils/asyncHandler');
 router.get('/', authMiddleware, asyncHandler(cartController.getCart));
 
 /**
- * @route POST /api/cart/items
- * @description Add item to cart
+ * @route POST /api/cart
+ * @description Add item to cart (task requirement mapping)
  * @access Private
  */
-router.post('/items', authMiddleware, cartValidation.addItem, asyncHandler(cartController.addItem));
+router.post('/', authMiddleware, cartValidation.addItem, asyncHandler(cartController.addToCart));
+
+/**
+ * @route POST /api/cart/items
+ * @description Add item to cart (legacy)
+ * @access Private
+ */
+router.post('/items', authMiddleware, cartValidation.addItem, asyncHandler(cartController.addToCart));
 
 /**
  * @route PUT /api/cart/items/:productId
@@ -42,11 +49,18 @@ router.post('/items', authMiddleware, cartValidation.addItem, asyncHandler(cartC
 router.put('/items/:productId', authMiddleware, asyncHandler(cartController.updateItem));
 
 /**
- * @route DELETE /api/cart/items/:productId
- * @description Remove item from cart
+ * @route DELETE /api/cart/:id
+ * @description Remove item from cart (task requirement mapping)
  * @access Private
  */
-router.delete('/items/:productId', authMiddleware, asyncHandler(cartController.removeItem));
+router.delete('/:productId', authMiddleware, asyncHandler(cartController.removeFromCart));
+
+/**
+ * @route DELETE /api/cart/items/:productId
+ * @description Remove item from cart (legacy)
+ * @access Private
+ */
+router.delete('/items/:productId', authMiddleware, asyncHandler(cartController.removeFromCart));
 
 /**
  * @route DELETE /api/cart

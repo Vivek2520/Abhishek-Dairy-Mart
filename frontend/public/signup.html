@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up | Abhishek Dairy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Buy dairy products online in your area">
+    <title>Abhishek Dairy Mart – Sign Up</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body data-page="signup" class="min-h-screen bg-slate-100 flex items-center justify-center p-4">
     <main class="w-full max-w-md bg-white rounded-2xl shadow-lg p-6">
         <h1 class="text-2xl font-bold text-slate-800 mb-2">Create Account</h1>
@@ -16,22 +19,28 @@
         <form id="signupForm" class="space-y-4">
             <div>
                 <label for="signupName" class="block text-sm font-medium text-slate-700 mb-1">Name</label>
-                <input id="signupName" type="text" required class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <input id="signupName" type="text" required
+                    class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div>
                 <label for="signupEmail" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                <input id="signupEmail" type="email" required class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <input id="signupEmail" type="email" required
+                    class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div>
                 <label for="signupPassword" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                <input id="signupPassword" type="password" required minlength="8" class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <input id="signupPassword" type="password" required minlength="8"
+                    class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div>
-                <label for="signupConfirmPassword" class="block text-sm font-medium text-slate-700 mb-1">Confirm Password</label>
-                <input id="signupConfirmPassword" type="password" required minlength="8" class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <label for="signupConfirmPassword" class="block text-sm font-medium text-slate-700 mb-1">Confirm
+                    Password</label>
+                <input id="signupConfirmPassword" type="password" required minlength="8"
+                    class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
-            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg py-2.5">
+            <button type="submit"
+                class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg py-2.5">
                 Register
             </button>
         </form>
@@ -44,4 +53,5 @@
 
     <script type="module" src="/public/js/authPages.js"></script>
 </body>
+
 </html>

@@ -5,7 +5,8 @@
  * @module controllers/orderController
  */
 
-const orderService = require('../services/orderService');
+const orderServiceDB = require('../services/orderServiceDB');
+const db = require('../config/db');
 const couponService = require('../services/couponService');
 const excelService = require('../services/excelService');
 const userService = require('../services/userService');
@@ -86,7 +87,7 @@ const getAllOrders = async (req, res, next) => {
         console.log(`[REQUEST] GET /api/orders`);
 
         // Load orders
-        const orders = orderService.loadOrders();
+        const orders = await orderServiceDB.getAllOrders();
 
         console.log(`[RESPONSE] Returning ${orders.length} orders`);
 
@@ -115,7 +116,16 @@ const getOrderById = async (req, res, next) => {
         console.log(`[REQUEST] GET /api/orders/${orderId}`);
 
         // Find order
-        const order = orderService.findOrderById(orderId);
+        const [orders] = await db.execute('SELECT * FROM orders WHERE order_id = ?', [orderId]);
+        const order = orders[0];
+        if (!order) {
+            throw new AppError('Order not found', 404);
+        }
+        order.items = JSON.parse(order.items);
+        res.status(200).json({
+            success: true,
+            data: order
+        });
 
         if (!order) {
             console.log(`[WARNING] Order not found: ${orderId}`);

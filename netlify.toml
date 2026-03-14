@@ -1,14 +1,8 @@
 [build]
-  publish = "."
-  command = "echo 'No build step'"
-
-[build.environment]
-  NODE_VERSION = "18"
+  publish = "frontend/public"
+  command = "echo 'Static frontend deployment'"
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  from = "/*"
+  to = "/index.html"
   status = 200
-
-[functions]
-  directory = "netlify/functions"

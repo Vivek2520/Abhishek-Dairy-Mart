@@ -13,7 +13,7 @@ require('dotenv').config();
  * CRITICAL SECURITY ENHANCEMENT - Prevents misconfiguration
  */
 const validateEnvironment = () => {
-    const requiredEnvVars = ['JWT_SECRET', 'ADMIN_PASSWORD_HASH', 'NODE_ENV'];
+const requiredEnvVars = ['JWT_SECRET', 'ADMIN_PASSWORD_HASH', 'NODE_ENV', 'CORS_ORIGINS'];
     const missingVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
     
     if (missingVars.length > 0) {
@@ -80,7 +80,7 @@ const config = {
 
     // CORS Configuration
     cors: {
-        origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+        origin: undefined, // Uses function-based validation in corsMiddleware
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
         credentials: true,
         optionsSuccessStatus: 200,

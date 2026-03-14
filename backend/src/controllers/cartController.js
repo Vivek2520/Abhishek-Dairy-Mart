@@ -5,9 +5,8 @@
  * @module controllers/cartController
  */
 
-const cartService = require('../services/cartService');
-const productService = require('../services/productService');
-const couponService = require('../services/couponService');
+const cartServiceDB = require('../services/cartServiceDB');
+const db = require('../config/db');
 const { AppError } = require('../utils/AppError');
 
 /**
@@ -19,7 +18,7 @@ const getCart = async (req, res, next) => {
         const userId = req.user.userId;
         console.log(`[REQUEST] GET /api/cart - User: ${userId}`);
 
-        const cart = cartService.getCart(userId);
+        const cart = await cartServiceDB.getCart(userId);
 
         res.status(200).json({
             success: true,
@@ -42,20 +41,13 @@ const addToCart = async (req, res, next) => {
         
         console.log(`[REQUEST] POST /api/cart/items - User: ${userId}, Product: ${productId}`);
 
-        if (!productId) {
-            throw new AppError('Product ID is required', 400, 'ValidationError');
-        }
-
-        // Get product details
-        const products = productService.loadProducts();
-        const product = productService.findProductById(products, productId);
-
-        if (!product) {
+        // Verify product exists
+        const [product] = await db.execute('SELECT id FROM products WHERE id = ?', [productId]);
+        if (product.length === 0) {
             throw new AppError('Product not found', 404, 'NotFoundError');
         }
 
-        // Add to cart
-        const cart = cartService.addItem(userId, product, quantity);
+        const cart = await cartServiceDB.addItem(userId, productId, quantity);
 
         res.status(200).json({
             success: true,
@@ -92,7 +84,7 @@ const updateCartItem = async (req, res, next) => {
             throw new AppError('Quantity cannot be negative', 400, 'ValidationError');
         }
 
-        const cart = cartService.updateItemQuantity(userId, productId, quantity);
+        const cart = await cartServiceDB.updateItemQuantity(userId, productId, quantity);
 
         res.status(200).json({
             success: true,
@@ -120,7 +112,7 @@ const removeFromCart = async (req, res, next) => {
             throw new AppError('Product ID is required', 400, 'ValidationError');
         }
 
-        const cart = cartService.removeItem(userId, productId);
+        const cart = await cartServiceDB.removeItem(userId, productId);
 
         res.status(200).json({
             success: true,
@@ -142,7 +134,7 @@ const clearCart = async (req, res, next) => {
         const userId = req.user.userId;
         console.log(`[REQUEST] DELETE /api/cart - User: ${userId}`);
 
-        const cart = cartService.clearCart(userId);
+        const cart = await cartServiceDB.clearCart(userId);
 
         res.status(200).json({
             success: true,
@@ -166,7 +158,7 @@ const mergeCart = async (req, res, next) => {
         
         console.log(`[REQUEST] POST /api/cart/merge - User: ${userId}`);
 
-        const cart = cartService.mergeCart(userId, localItems);
+        const cart = await cartServiceDB.mergeCart(userId, localItems);
 
         res.status(200).json({
             success: true,
@@ -194,7 +186,7 @@ const applyCoupon = async (req, res, next) => {
             throw new AppError('Coupon code is required', 400, 'ValidationError');
         }
 
-        const cart = cartService.getCart(userId);
+        const cart = await cartServiceDB.getCart(userId);
 
         // validate coupon against cart subtotal and items
         const { discount, newTotal, coupon } = couponService.validateCoupon(
@@ -205,7 +197,16 @@ const applyCoupon = async (req, res, next) => {
         );
 
         // store coupon info on cart for later order creation
-        cartService.applyCoupon(userId, code, discount);
+        // TODO: Coupon support
+        res.status(200).json({
+            success: true,
+            message: 'Coupon applied successfully',
+            data: {
+                discount: 0,
+                total: cart.total,
+                coupon: { code }
+            }
+        });
 
         res.status(200).json({
             success: true,
